@@ -1,11 +1,12 @@
-import React from 'react';
-import firebase from 'firebase/app';
-import {withRouter as Router} from 'react-router-dom';
-import Routes from './Routes';
-import 'firebase/auth';
-import 'firebase/database';
-import 'fontsource-roboto';
-
+import React, {useState, useEffect} from "react";
+import firebase from "firebase/app";
+import { withRouter as Router } from "react-router-dom";
+import Routes from "./Routes";
+import {loadUser} from './utils/dbUtils';
+import AppbarDrawer from "./layout/AppbarDrawer";
+import "firebase/auth";
+import "firebase/database";
+import "fontsource-roboto";
 
 var firebaseConfig = {
   apiKey: "AIzaSyCTa_fTqxw4CFXtk64rNZsqRgizuNMt4OI",
@@ -14,17 +15,39 @@ var firebaseConfig = {
   projectId: "local-commerce-6663e",
   storageBucket: "local-commerce-6663e.appspot.com",
   messagingSenderId: "858423879482",
-  appId: "1:858423879482:web:e5640ecea6708e18ae9203"
+  appId: "1:858423879482:web:e5640ecea6708e18ae9203",
 };
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 function App() {
+
+  const [user, setUser] = useState(null);
+
+  const onLogout = () => {
+    setUser(null);
+  };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(response => {
+      if (response){
+        //leer los datos del usuario
+        loadUser(response.uid)
+        .then(data => { setUser(data); });
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Router>
-        <Routes/>
+        <AppbarDrawer
+          user={user}
+          onLogout={onLogout}
+        >
+          <Routes />
+        </AppbarDrawer>
       </Router>
     </div>
   );

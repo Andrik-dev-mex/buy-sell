@@ -8,6 +8,7 @@ import UserEdit from './components/user/UserEdit';
 import Notifications from './components/user/Notifications';
 import AddProduct from './components/products/AddProduct';
 import Chat from './components/user/Chat';
+import BuysUser from './components/user/BuysUser';
 
 export default function Routes(){
   return(
@@ -19,6 +20,7 @@ export default function Routes(){
       <Route exact path = "/user/edit/:id" component={UserEdit}/>
       <Route exact path = "/user/notifications/:id/" component={Notifications}/>
       <Route exact path = "/user/addproduct/:id" component={AddProduct}/>
+      <Route exact path = "/user/yourbuys/:id" component ={BuysUser}/>
       <Route exact path = "/user/chat/:id" component={Chat}/>
     </Switch>
   )
