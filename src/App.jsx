@@ -22,23 +22,25 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 function App() {
+  
 
   const [user, setUser] = useState(null);
 
   const onLogout = () => {
     setUser(null);
   };
-
+  
   useEffect(() => {
     firebase.auth().onAuthStateChanged(response => {
       if (response){
         //leer los datos del usuario
         loadUser(response.uid)
-        .then(data => { setUser(data); });
+        .then(data => { setUser(data); })
+        .catch(error => {console.log(error);});
       }
     });
   }, []);
-
+  
   return (
     <div>
       <Router>

@@ -9,6 +9,7 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import Button from '@material-ui/core/Button';
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -98,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AppbarDrawer(props, {user}) {
+export default function AppbarDrawer(props, {user, onLogout}) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -135,6 +136,9 @@ export default function AppbarDrawer(props, {user}) {
               Vulcanizadora JAM
             </Typography>
           </Link>
+          <Button onClick={onLogout}>
+            Salir
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer

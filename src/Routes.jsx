@@ -1,12 +1,12 @@
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
-import Home from './components/';
+import Home from './components/Home';
 import Login from './components/auth/Login';
 import Registrer from './components/auth/Registrer';
 import Product from './components/products/Product';
 import UserEdit from './components/user/UserEdit';
 import Notifications from './components/user/Notifications';
-import AddProduct from './components/products/AddProduct';
+import AddProduct from './components/user/AddProduct';
 import Chat from './components/user/Chat';
 import BuysUser from './components/user/BuysUser';
 
