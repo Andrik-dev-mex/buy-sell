@@ -1,69 +1,77 @@
-import React, {useState} from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
 import AlertSnack from "../../AlertSnack";
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { Link } from  "@material-ui/core"
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import { Link } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink, withRouter } from "react-router-dom";
-import firebase from 'firebase/app';
-import 'firebase/database';
-import 'firebase/auth';
+import firebase from "firebase/app";
+import "firebase/database";
+import "firebase/auth";
 
 //este es para el link
 const MyLink = React.forwardRef((props, ref) => (
   <RouterLink ref={ref} {...props} />
 ));
 const useStyles = makeStyles((theme) => ({
-root: {
-  height: '100vh',
-},
-image: {
-  backgroundImage: 'url(https://andro4all.com/files/2020/09/Fondo-de-pantalla-del-espacio.jpg)',
-  backgroundRepeat: 'no-repeat',
-  backgroundColor:
-    theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-},
-paper: {
-  margin: theme.spacing(8, 4),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-},
-avatar: {
-  margin: theme.spacing(1),
-  backgroundColor: theme.palette.secondary.main,
-},
-form: {
-  width: '100%', // Fix IE 11 issue.
-  marginTop: theme.spacing(1),
-},
-submit: {
-  margin: theme.spacing(3, 0, 2),
-},
+  root: {
+    height: "100vh",
+  },
+  image: {
+    backgroundImage:
+      "url(https://andro4all.com/files/2020/09/Fondo-de-pantalla-del-espacio.jpg)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 function Registrer(props) {
   const classes = useStyles();
   const [user, setUser] = useState({
-    email:'',
-    password:'' 
+    name: "",
+    lastname: '',
+    avatar: "",
+    location: "",
+    email: "",
+    password: "",
   });
+
   const [alertOptions, setAlertOptions] = useState({
     open: false,
     variant: "",
     message: "",
-  })
+  });
 
   const handlechange = (e) => {
     setUser({
-        ...user,
-        [e.target.name]: e.target.value
+      ...user,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -72,32 +80,43 @@ function Registrer(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-    .then(response => {
-        props.history.push('/')
-    })
-    .catch(error => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(user.email, user.password)
+      .then((response) => {
+        //guardar los datos del usuario
+        delete user.password;
+        firebase.database().ref(`/users/${response.user.uid}`).set(user);
+        //alert('Bienvenido a Chat App');
+        setAlertOptions({
+          variant: "success",
+          message: "Usuario creado con exito",
+          open: true,
+        });
+        props.history.push("/");
+      })
+      .catch((error) => {
         console.log(error);
-       // alert(error.message);
-       setAlertOptions({
-         open: true,
-         message: "Error",
-         variant:'error'
-       })
-    });
+        //alert(error.message);
+        setAlertOptions({
+          variant: "error",
+          message: "error al crear usuario",
+          open: true,
+        });
+      });
   };
 
   return (
     <Grid container component="main" className={classes.root}>
-    <CssBaseline />
-    <Grid item xs={false} sm={4} md={7} className={classes.image} />
-    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Ingresar a Chat App
-        </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-        <TextField
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            Ingresar a Chat App
+          </Typography>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <TextField
               variant="outlined"
               margin="normal"
               required
@@ -110,14 +129,14 @@ function Registrer(props) {
               defaultValue={user.name}
               onChange={handlechange}
             />
-             <TextField
+            <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="LastName"
+              id="lastname"
               label="LastName"
-              name="LastName"
+              name="lastname"
               autoComplete="LastName"
               autoFocus
               defaultValue={user.LastName}
@@ -134,46 +153,46 @@ function Registrer(props) {
               autoComplete="avatar"
               onChange={handlechange}
             />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            defaultValue={user.email}
-            onChange={handlechange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            defaultValue={user.password}
-            onChange={handlechange}
-          />
-           <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="phone"
-            label="Phone number"
-            name="phone"
-            autoComplete="phone"
-            autoFocus
-            defaultValue={user.Phone}
-            onChange={handlechange}
-          />
-           <TextField
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              defaultValue={user.email}
+              onChange={handlechange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              defaultValue={user.password}
+              onChange={handlechange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="phone"
+              label="Phone number"
+              name="phone"
+              autoComplete="phone"
+              autoFocus
+              defaultValue={user.Phone}
+              onChange={handlechange}
+            />
+            <TextField
               variant="outlined"
               margin="normal"
               required
@@ -186,33 +205,33 @@ function Registrer(props) {
               defaultValue={user.Location}
               onChange={handlechange}
             />
-          
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Ingresar
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link to="/login" component={MyLink} variant="body2">
-                {"Si tengo una cuenta"}
-              </Link>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Ingresar
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link to="/login" component={MyLink} variant="body2">
+                  {"Si tengo una cuenta"}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
+          </form>
         </div>
-          <AlertSnack
-            open ={alertOptions.open}
-            message = {alertOptions.message}
-            variant = {alertOptions.variant}
-          />        
+        <AlertSnack
+          open={alertOptions.open}
+          message={alertOptions.message}
+          variant={alertOptions.variant}
+        />
       </Grid>
     </Grid>
-    );
+  );
 }
 
 export default withRouter(Registrer);

@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "firebase/app";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./Routes";
-import {loadUser} from './utils/dbUtils';
+import { loadUser } from "./utils/dbUtils";
 import AppbarDrawer from "./layout/AppbarDrawer";
 import "firebase/auth";
 import "firebase/database";
@@ -18,7 +18,6 @@ var firebaseConfig = {
   appId: "1:858423879482:web:e5640ecea6708e18ae9203",
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 function App() {
@@ -27,25 +26,30 @@ function App() {
   const onLogout = () => {
     setUser(null);
   };
-  
+
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(response => {
-      if (response){
+    firebase.auth().onAuthStateChanged((response) => {
+      if (response) {
         //leer los datos del usuario
         loadUser(response.uid)
-        .then(data => { setUser(data); })
-        .catch(error => {console.log(error);});
+          .then((data) => {
+            setUser(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     });
   }, []);
-  
+
   return (
     <div>
       <Router>
-        <AppbarDrawer>
-          {user && <user user={user} onLogout={onLogout}/>}
-        </AppbarDrawer>
-        <Routes />
+        {user && (
+          <AppbarDrawer id={user.uid} onLogout={onLogout} user={user}>
+            <Routes />
+          </AppbarDrawer>
+        )}
       </Router>
     </div>
   );
