@@ -82,11 +82,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   containerR: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'end',
-    justifyContent: 'flex-end'
-  }
+    display: "flex",
+    width: "100%",
+    alignItems: "end",
+    justifyContent: "flex-end",
+  },
 }));
 
 const ContentDrawer = (props) => {
@@ -128,18 +128,18 @@ const ContentDrawer = (props) => {
             <Typography variant="h6" noWrap>
               Buy Sell
             </Typography>
-          </Link>        
-          <div className={classes.containerR}>
-          <Link to={"/login"} className={classes.link}>
-            <Tooltip title="Login">
-              <ListItem button>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-              </ListItem>
-            </Tooltip>
           </Link>
-          <Button onClick={props.onLogout}>Salir</Button>
+          <div className={classes.containerR}>
+            <Link to={"/login"} className={classes.linkHeader}>
+              <Tooltip title="Login">
+                <ListItem button>
+                  <ListItemIcon>
+                    <PersonIcon style={{color:'white'}} />
+                  </ListItemIcon>
+                </ListItem>
+              </Tooltip>
+            </Link>
+            <Button variant="outlined" color="inherit" onClick={props.onLogout}>Salir</Button>
           </div>
         </Toolbar>
       </AppBar>

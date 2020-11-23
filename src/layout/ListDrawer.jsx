@@ -1,15 +1,17 @@
 import React, { Fragment } from "react";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import NewReleasesRoundedIcon from "@material-ui/icons/NewReleasesRounded";
-import MarkunreadMailboxSharpIcon from "@material-ui/icons/MarkunreadMailboxSharp";
 import ListItemText from "@material-ui/core/ListItemText";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { Link } from "react-router-dom";
 import { Tooltip, ListItem, ListItemIcon } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import PublicIcon from '@material-ui/icons/Public';
+import ChatIcon from '@material-ui/icons/Chat';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
     color: "black",
@@ -28,7 +30,7 @@ const ListDrawer = ({ id }) => {
         <Tooltip title="Ir a Mi Perfil">
           <ListItem button>
             <ListItemIcon>
-              <ShoppingCartIcon />
+            <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary="Mi Perfil" />
           </ListItem>
@@ -37,7 +39,7 @@ const ListDrawer = ({ id }) => {
       <Link to={`/user/notifications/${id}`} className={classes.link}>
         <ListItem button>
           <ListItemIcon>
-            <LocalMallIcon />
+            <NotificationsActiveIcon/>
           </ListItemIcon>
           <ListItemText primary="Notificaciones" />
         </ListItem>
@@ -46,9 +48,9 @@ const ListDrawer = ({ id }) => {
         <Tooltip title="Agregar producto">
           <ListItem button>
             <ListItemIcon>
-              <AccountBoxIcon />
+              <PublicIcon/>
             </ListItemIcon>
-            <ListItemText primary="Usuarios" />
+            <ListItemText primary="Nueva Publicacion" />
           </ListItem>
         </Tooltip>
       </Link>
@@ -56,7 +58,7 @@ const ListDrawer = ({ id }) => {
         <Tooltip title="Ir a Mensajes">
           <ListItem button>
             <ListItemIcon>
-              <NewReleasesRoundedIcon />
+              <ChatIcon/>
             </ListItemIcon>
             <ListItemText primary="Mensajes" />
           </ListItem>
@@ -66,7 +68,7 @@ const ListDrawer = ({ id }) => {
         <Tooltip title="Ir a Compras">
           <ListItem button>
             <ListItemIcon>
-              <MarkunreadMailboxSharpIcon />
+              <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Mis compras" />
           </ListItem>
