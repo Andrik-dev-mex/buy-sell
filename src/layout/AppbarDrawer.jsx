@@ -17,6 +17,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import PersonIcon from '@material-ui/icons/Person';
 import { Link } from "react-router-dom";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -139,6 +140,15 @@ export default function AppbarDrawer(props, {id, user, onLogout}) {
           <Button onClick={onLogout}>
             Salir
           </Button>
+          <Link to={"/Login"} className={classes.link}>
+            <Tooltip title="Login">
+              <ListItem button>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+              </ListItem>
+            </Tooltip>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer

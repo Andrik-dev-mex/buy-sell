@@ -22,8 +22,6 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 function App() {
-  
-
   const [user, setUser] = useState(null);
 
   const onLogout = () => {
@@ -44,12 +42,10 @@ function App() {
   return (
     <div>
       <Router>
-        <AppbarDrawer
-          user={user}
-          onLogout={onLogout}
-        >
-          <Routes />
+        <AppbarDrawer>
+          {user && <user user={user} onLogout={onLogout}/>}
         </AppbarDrawer>
+        <Routes />
       </Router>
     </div>
   );
