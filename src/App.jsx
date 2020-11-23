@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import firebase from "firebase/app";
-import { withRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./Routes";
 import {loadUser} from './utils/dbUtils';
 import AppbarDrawer from "./layout/AppbarDrawer";

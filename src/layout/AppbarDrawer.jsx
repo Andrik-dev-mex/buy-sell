@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AppbarDrawer(props, {user, onLogout}) {
+export default function AppbarDrawer(props, {id, user, onLogout}) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -161,7 +161,7 @@ export default function AppbarDrawer(props, {user, onLogout}) {
         </div>
         <Divider />
         <List>
-          <Link to={`/user/edit/${user.id}`} className={classes.link}>
+          <Link to={`/user/edit/${id}`} className={classes.link}>
             <Tooltip title="Ir a Mi Perfil">
               <ListItem button>
                 <ListItemIcon>
@@ -171,7 +171,7 @@ export default function AppbarDrawer(props, {user, onLogout}) {
               </ListItem>
             </Tooltip>
           </Link>
-          <Link to={`/user/notifications/${user.id}`} className={classes.link}>
+          <Link to={`/user/notifications/${id}`} className={classes.link}>
             <ListItem button>
               <ListItemIcon>
                 <LocalMallIcon />
@@ -179,7 +179,7 @@ export default function AppbarDrawer(props, {user, onLogout}) {
               <ListItemText primary="Notificaciones" />
             </ListItem>
           </Link>
-          <Link to={`user/addproduct/${user.id}`} className={classes.link}>
+          <Link to={`/user/addproduct/${id}`} className={classes.link}>
             <Tooltip title="Agregar producto">
               <ListItem button>
                 <ListItemIcon>
@@ -189,7 +189,7 @@ export default function AppbarDrawer(props, {user, onLogout}) {
               </ListItem>
             </Tooltip>
           </Link>
-          <Link to={`/user/chat/${user.id}`} className={classes.link}>
+          <Link to={`/user/chat/${id}`} className={classes.link}>
             <Tooltip title="Ir a Mensajes">
               <ListItem button>
                 <ListItemIcon>
@@ -199,7 +199,7 @@ export default function AppbarDrawer(props, {user, onLogout}) {
               </ListItem>
             </Tooltip>
           </Link>
-          <Link to={`/user/yourbuys/${user.id}`} className={classes.link}>
+          <Link to={`/user/yourbuys/${id}`} className={classes.link}>
             <Tooltip title="Ir a Compras">
               <ListItem button>
                 <ListItemIcon>
