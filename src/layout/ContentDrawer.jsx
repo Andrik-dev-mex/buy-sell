@@ -1,36 +1,26 @@
-import React from "react";
-import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import React, { Fragment } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Button from '@material-ui/core/Button';
-import MenuIcon from "@material-ui/icons/Menu";
+import Button from "@material-ui/core/Button";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from "@material-ui/icons/Person";
 import { Link } from "react-router-dom";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
+import Drawer from "@material-ui/core/Drawer";
+import clsx from "clsx";
 import Tooltip from "@material-ui/core/Tooltip";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import NewReleasesRoundedIcon from "@material-ui/icons/NewReleasesRounded";
-import MarkunreadMailboxSharpIcon from "@material-ui/icons/MarkunreadMailboxSharp";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -45,19 +35,9 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+
   hide: {
     display: "none",
-  },
-  link: {
-    textDecoration: "none",
-    color: "black",
-    "&:hover": {
-      textDecoration: "none",
-      color: "black",
-    },
   },
   linkHeader: {
     textDecoration: "none",
@@ -98,24 +78,33 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  containerR: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'end',
+    justifyContent: 'flex-end'
+  }
 }));
 
-export default function AppbarDrawer(props, {id, user, onLogout}) {
+const ContentDrawer = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  console.log(props.user);
   return (
-    <div className={classes.root}>
-      <CssBaseline />
+    <Fragment>
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -123,24 +112,25 @@ export default function AppbarDrawer(props, {id, user, onLogout}) {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
+          {props.user && (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+
           <Link to="/" className={classes.linkHeader}>
             <Typography variant="h6" noWrap>
-              Vulcanizadora JAM
+              Buy Sell
             </Typography>
-          </Link>
-          <Button onClick={onLogout}>
-            Salir
-          </Button>
-          <Link to={"/Login"} className={classes.link}>
+          </Link>        
+          <div className={classes.containerR}>
+          <Link to={"/login"} className={classes.link}>
             <Tooltip title="Login">
               <ListItem button>
                 <ListItemIcon>
@@ -149,6 +139,8 @@ export default function AppbarDrawer(props, {id, user, onLogout}) {
               </ListItem>
             </Tooltip>
           </Link>
+          <Button onClick={props.onLogout}>Salir</Button>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -170,56 +162,7 @@ export default function AppbarDrawer(props, {id, user, onLogout}) {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          <Link to={`/user/edit/${id}`} className={classes.link}>
-            <Tooltip title="Ir a Mi Perfil">
-              <ListItem button>
-                <ListItemIcon>
-                  <ShoppingCartIcon />
-                </ListItemIcon>
-                <ListItemText primary="Mi Perfil" />
-              </ListItem>
-            </Tooltip>
-          </Link>
-          <Link to={`/user/notifications/${id}`} className={classes.link}>
-            <ListItem button>
-              <ListItemIcon>
-                <LocalMallIcon />
-              </ListItemIcon>
-              <ListItemText primary="Notificaciones" />
-            </ListItem>
-          </Link>
-          <Link to={`/user/addproduct/${id}`} className={classes.link}>
-            <Tooltip title="Agregar producto">
-              <ListItem button>
-                <ListItemIcon>
-                  <AccountBoxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Usuarios" />
-              </ListItem>
-            </Tooltip>
-          </Link>
-          <Link to={`/user/chat/${id}`} className={classes.link}>
-            <Tooltip title="Ir a Mensajes">
-              <ListItem button>
-                <ListItemIcon>
-                  <NewReleasesRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Mensajes" />
-              </ListItem>
-            </Tooltip>
-          </Link>
-          <Link to={`/user/yourbuys/${id}`} className={classes.link}>
-            <Tooltip title="Ir a Compras">
-              <ListItem button>
-                <ListItemIcon>
-                  <MarkunreadMailboxSharpIcon />
-                </ListItemIcon>
-                <ListItemText primary="Mis compras" />
-              </ListItem>
-            </Tooltip>
-          </Link>
-        </List>
+        <List>{props.listContent}</List>
         <Divider />
       </Drawer>
       <main
@@ -228,8 +171,10 @@ export default function AppbarDrawer(props, {id, user, onLogout}) {
         })}
       >
         <div className={classes.drawerHeader} />
-        {props.children}
+        {props.content}
       </main>
-    </div>
+    </Fragment>
   );
-}
+};
+
+export default ContentDrawer;
