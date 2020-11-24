@@ -6,8 +6,9 @@ import { loadUser } from "./utils/dbUtils";
 import ListDrawer from "./layout/ListDrawer";
 import Appbar from "./layout/Appbar";
 import ContentDrawer from "./layout/ContentDrawer";
+import User from "./components/user/User";
 
-function App() {
+function App(props) {
   const [user, setUser] = useState(null);
 
   if (user) {
@@ -41,9 +42,9 @@ function App() {
           content={
             <ContentDrawer
               content={<Routes />}
-              listContent={<ListDrawer id={id} />}
-              onLogout={onLogout}
+              listContent={<ListDrawer />}
               user={user}
+              userOptions={user && <User user={user} onLogout={onLogout}/>}
             />
           }
         />

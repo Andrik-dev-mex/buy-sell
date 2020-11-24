@@ -9,9 +9,8 @@ import { Link } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink, withRouter } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/database";
-import "firebase/auth";
+
+import firebase from '../../config/firebase';
 
 //este es para el link
 const MyLink = React.forwardRef((props, ref) => (
@@ -60,6 +59,11 @@ function Registrer(props) {
     location: "",
     email: "",
     password: "",
+    city: "",
+    street: "",
+    phone: "",
+    numberIntStreet: "",
+    numberExtStreet: ""
   });
 
   const [alertOptions, setAlertOptions] = useState({
@@ -75,6 +79,16 @@ function Registrer(props) {
     });
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOptions({
+      ...alertOptions,
+      open : false,
+    });
+  };
   //aqui es cuando el usuario le de en ingresar nos autentique con firebase
 
   const handleSubmit = (e) => {
@@ -100,7 +114,7 @@ function Registrer(props) {
         //alert(error.message);
         setAlertOptions({
           variant: "error",
-          message: "error al crear usuario",
+          message: "error al crear usuario " + error.message,
           open: true,
         });
       });
@@ -113,16 +127,16 @@ function Registrer(props) {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Ingresar a Chat App
+            Registrar en Buy Sell
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit}>
+          <form className={classes.form} onSubmit={handleSubmit} validate>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="name"
-              label="Name"
+              label="Nombre"
               name="name"
               autoComplete="name"
               autoFocus
@@ -135,7 +149,7 @@ function Registrer(props) {
               required
               fullWidth
               id="lastname"
-              label="LastName"
+              label="Apellidos"
               name="lastname"
               autoComplete="LastName"
               autoFocus
@@ -147,19 +161,8 @@ function Registrer(props) {
               margin="normal"
               required
               fullWidth
-              id="avatar"
-              label="URL avatar"
-              name="avatar"
-              autoComplete="avatar"
-              onChange={handlechange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               id="email"
-              label="Email Address"
+              label="Correo Electronico"
               name="email"
               autoComplete="email"
               autoFocus
@@ -185,11 +188,11 @@ function Registrer(props) {
               required
               fullWidth
               id="phone"
-              label="Phone number"
+              label="Telefono"
               name="phone"
               autoComplete="phone"
               autoFocus
-              defaultValue={user.Phone}
+              defaultValue={user.phone}
               onChange={handlechange}
             />
             <TextField
@@ -198,8 +201,8 @@ function Registrer(props) {
               required
               fullWidth
               id="Location"
-              label="Location"
-              name="Location"
+              label="Localidad"
+              name="location"
               autoComplete="Location"
               autoFocus
               defaultValue={user.Location}
@@ -228,6 +231,7 @@ function Registrer(props) {
           open={alertOptions.open}
           message={alertOptions.message}
           variant={alertOptions.variant}
+          handleClose={handleClose}
         />
       </Grid>
     </Grid>

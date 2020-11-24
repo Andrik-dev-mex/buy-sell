@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -50,6 +50,7 @@ submit: {
 
 function Login(props) {
   const classes = useStyles();
+  const { currentUser } = firebase.auth();
   const [user, setUser] = useState({
     email:'',
     password:'' 
@@ -67,6 +68,12 @@ function Login(props) {
     });
   };
 
+  useEffect(() => {
+    if(!currentUser){
+      props.history.push('/');
+    }
+    //eslint-disable-next-line
+  },[])
   //aqui es cuando el usuario le de en ingresar nos autentique con firebase
 
   const handleLogin = (e) => {
@@ -94,7 +101,7 @@ function Login(props) {
     <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Ingresar a Chat App
+          Ingresar a Buy Sell
         </Typography>
         <form className={classes.form} onSubmit={handleLogin}>
           <TextField
@@ -103,7 +110,7 @@ function Login(props) {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Correo Electronico"
             name="email"
             autoComplete="email"
             autoFocus

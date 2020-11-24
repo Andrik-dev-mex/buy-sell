@@ -5,16 +5,11 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import PersonIcon from "@material-ui/icons/Person";
 import { Link } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import clsx from "clsx";
-import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -129,18 +124,7 @@ const ContentDrawer = (props) => {
               Buy Sell
             </Typography>
           </Link>
-          <div className={classes.containerR}>
-            <Link to={"/login"} className={classes.linkHeader}>
-              <Tooltip title="Login">
-                <ListItem button>
-                  <ListItemIcon>
-                    <PersonIcon style={{color:'white'}} />
-                  </ListItemIcon>
-                </ListItem>
-              </Tooltip>
-            </Link>
-            <Button variant="outlined" color="inherit" onClick={props.onLogout}>Salir</Button>
-          </div>
+          <div className={classes.containerR}>{props.userOptions}</div>
         </Toolbar>
       </AppBar>
       <Drawer

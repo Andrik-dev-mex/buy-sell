@@ -26,7 +26,7 @@ const ListDrawer = ({ id }) => {
   const classes = useStyles();
   return (
     <Fragment>
-      <Link to={`/user/edit/${id}`} className={classes.link}>
+      <Link to={`/user/edit/`} className={classes.link}>
         <Tooltip title="Ir a Mi Perfil">
           <ListItem button>
             <ListItemIcon>
@@ -36,7 +36,7 @@ const ListDrawer = ({ id }) => {
           </ListItem>
         </Tooltip>
       </Link>
-      <Link to={`/user/notifications/${id}`} className={classes.link}>
+      <Link to={`/user/notifications/`} className={classes.link}>
         <ListItem button>
           <ListItemIcon>
             <NotificationsActiveIcon/>
@@ -44,7 +44,7 @@ const ListDrawer = ({ id }) => {
           <ListItemText primary="Notificaciones" />
         </ListItem>
       </Link>
-      <Link to={`/user/addproduct/${id}`} className={classes.link}>
+      <Link to={`/user/addproduct/`} className={classes.link}>
         <Tooltip title="Agregar producto">
           <ListItem button>
             <ListItemIcon>
@@ -54,7 +54,7 @@ const ListDrawer = ({ id }) => {
           </ListItem>
         </Tooltip>
       </Link>
-      <Link to={`/user/chat/${id}`} className={classes.link}>
+      <Link to={`/user/chat/`} className={classes.link}>
         <Tooltip title="Ir a Mensajes">
           <ListItem button>
             <ListItemIcon>
@@ -64,7 +64,7 @@ const ListDrawer = ({ id }) => {
           </ListItem>
         </Tooltip>
       </Link>
-      <Link to={`/user/yourbuys/${id}`} className={classes.link}>
+      <Link to={`/user/yourbuys/`} className={classes.link}>
         <Tooltip title="Ir a Compras">
           <ListItem button>
             <ListItemIcon>
