@@ -7,9 +7,9 @@ import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { Link } from "react-router-dom";
 import { Tooltip, ListItem, ListItemIcon } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import PublicIcon from '@material-ui/icons/Public';
-import ChatIcon from '@material-ui/icons/Chat';
+import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
+import PublicIcon from "@material-ui/icons/Public";
+import ChatIcon from "@material-ui/icons/Chat";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -30,7 +30,7 @@ const ListDrawer = ({ id }) => {
         <Tooltip title="Ir a Mi Perfil">
           <ListItem button>
             <ListItemIcon>
-            <AccountBoxIcon />
+              <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary="Mi Perfil" />
           </ListItem>
@@ -39,26 +39,16 @@ const ListDrawer = ({ id }) => {
       <Link to={`/user/notifications/`} className={classes.link}>
         <ListItem button>
           <ListItemIcon>
-            <NotificationsActiveIcon/>
+            <NotificationsActiveIcon />
           </ListItemIcon>
           <ListItemText primary="Notificaciones" />
         </ListItem>
-      </Link>
-      <Link to={`/user/addproduct/`} className={classes.link}>
-        <Tooltip title="Agregar producto">
-          <ListItem button>
-            <ListItemIcon>
-              <PublicIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Nueva Publicacion" />
-          </ListItem>
-        </Tooltip>
       </Link>
       <Link to={`/user/chat/`} className={classes.link}>
         <Tooltip title="Ir a Mensajes">
           <ListItem button>
             <ListItemIcon>
-              <ChatIcon/>
+              <ChatIcon />
             </ListItemIcon>
             <ListItemText primary="Mensajes" />
           </ListItem>
@@ -71,6 +61,16 @@ const ListDrawer = ({ id }) => {
               <ShoppingCartIcon />
             </ListItemIcon>
             <ListItemText primary="Mis compras" />
+          </ListItem>
+        </Tooltip>
+      </Link>
+      <Link to={`/user/publications/`} className={classes.link}>
+        <Tooltip title="Ir a Mis Publicaciones">
+          <ListItem button>
+            <ListItemIcon>
+              <AccountBoxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mis Publicaciones" />
           </ListItem>
         </Tooltip>
       </Link>

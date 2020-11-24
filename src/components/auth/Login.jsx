@@ -69,11 +69,13 @@ function Login(props) {
   };
 
   useEffect(() => {
-    if(!currentUser){
+    if(currentUser){
       props.history.push('/');
+    } else {
+      
     }
-    //eslint-disable-next-line
-  },[])
+    
+  },[currentUser, props])
   //aqui es cuando el usuario le de en ingresar nos autentique con firebase
 
   const handleLogin = (e) => {
@@ -93,7 +95,7 @@ function Login(props) {
        })
     });
   };
-
+  console.log(currentUser);
   return (
     <Grid container component="main" className={classes.root}>
     <CssBaseline />

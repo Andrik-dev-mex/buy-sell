@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect } from "react";
+import { withRouter } from "react-router-dom";
+import firebase from "../config/firebase";
+function Home(props) {
+  const { currentUser } = firebase.auth();
+  console.log(currentUser);
+  useEffect(() => {
+    if(currentUser){
+      
+    } else {
+      props.history.push('/login');
+    }
+    
+  }, [currentUser,props]);
 
-export default function Home(){
-  return(
+  return (
     <div>
       <p>asdasd</p>
     </div>
-  )
-};
+  );
+}
+
+
+export default withRouter(Home);
