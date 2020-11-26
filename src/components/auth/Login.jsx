@@ -75,7 +75,7 @@ function Login(props) {
       
     }
     
-  },[currentUser, props])
+  },[currentUser, props]);
   //aqui es cuando el usuario le de en ingresar nos autentique con firebase
 
   const handleLogin = (e) => {
