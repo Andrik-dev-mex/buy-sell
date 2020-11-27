@@ -1,6 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Button, Stepper, Step, StepLabel, TextField } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  Stepper,
+  Step,
+  StepLabel,
+  TextField,
+} from "@material-ui/core";
+import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,36 +30,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-  return ["Datos de Tu producto", "Acepta nuestros terminos y condiciones", "Guarda tu producto"];
-}
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return (
-        <form >
-          <TextField
-            id=""
-            label="Paso2"
-          />
-        </form>
-      )
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown step";
-  }
+  return [
+    "Datos de Tu producto",
+    "Acepta nuestros terminos y condiciones",
+    "Guarda tu producto",
+  ];
 }
 
 const AddProduct = () => {
   const classes = useStyles();
   const [product, setProduct] = useState({
     name: "",
+    brand: "",
+    description: "",
+    state: "",
+    price : "",
+    image: "",
+    category: "",
+    descriptionExtended: "",
+    userID: "",
   });
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
   const steps = getSteps();
 
   const handleChange = (e) => {
@@ -61,49 +60,30 @@ const AddProduct = () => {
     });
   };
 
-  
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
-
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <StepOne product={product} handleChange={handleChange}/>;
+      case 1:
+        return <StepTwo />;
+      case 2:
+        return <StepTree />;
+      default:
+        return "Unknown step";
+    }
+  }
 
   return (
     <Fragment>
@@ -112,14 +92,6 @@ const AddProduct = () => {
           {steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
-            if (isStepOptional(index)) {
-              labelProps.optional = (
-                <Typography variant="caption">Optional</Typography>
-              );
-            }
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
             return (
               <Step key={label} {...stepProps}>
                 <StepLabel {...labelProps}>{label}</StepLabel>
@@ -139,9 +111,7 @@ const AddProduct = () => {
             </div>
           ) : (
             <div>
-              <Typography className={classes.instructions}>
-                {getStepContent(activeStep)}
-              </Typography>
+              {getStepContent(activeStep)}
               <div>
                 <Button
                   disabled={activeStep === 0}
@@ -150,16 +120,6 @@ const AddProduct = () => {
                 >
                   Back
                 </Button>
-                {isStepOptional(activeStep) && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSkip}
-                    className={classes.button}
-                  >
-                    Skip
-                  </Button>
-                )}
 
                 <Button
                   variant="contained"
