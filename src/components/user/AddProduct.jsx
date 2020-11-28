@@ -103,7 +103,7 @@ const AddProduct = () => {
           {activeStep === steps.length ? (
             <div>
               <Typography className={classes.instructions}>
-                All steps completed - you&apos;re finished
+              Todos los pasos sean completado: has terminado
               </Typography>
               <Button onClick={handleReset} className={classes.button}>
                 Reset

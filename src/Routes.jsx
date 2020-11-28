@@ -7,7 +7,7 @@ import Product from './components/products/Product';
 import UserEdit from './components/user/UserEdit';
 import Notifications from './components/user/Notifications';
 import AddProduct from './components/user/AddProduct';
-import Chat from './components/user/Chat';
+import Chat from './components/user/Chat/Chat';
 import BuysUser from './components/user/BuysUser';
 import UpdatePassword from './components/user/UpdatePassword';
 import Publications from "./components/user/Publications";
