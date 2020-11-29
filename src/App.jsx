@@ -7,6 +7,9 @@ import ListDrawer from "./layout/ListDrawer";
 import Appbar from "./layout/Appbar";
 import ContentDrawer from "./layout/ContentDrawer";
 import User from "./components/user/User";
+import { ThemeProvider } from "@material-ui/core/styles";
+import "fontsource-roboto";
+import Theme from "./config/theme";
 
 function App(props) {
   const [user, setUser] = useState(null);
@@ -38,16 +41,18 @@ function App(props) {
   return (
     <div>
       <Router>
-        <Appbar
-          content={
-            <ContentDrawer
-              content={<Routes />}
-              listContent={<ListDrawer />}
-              user={user}
-              userOptions={user && <User user={user} onLogout={onLogout}/>}
-            />
-          }
-        />
+        <ThemeProvider theme={Theme}>
+          <Appbar
+            content={
+              <ContentDrawer
+                content={<Routes />}
+                listContent={<ListDrawer />}
+                user={user}
+                userOptions={user && <User user={user} onLogout={onLogout} />}
+              />
+            }
+          />
+        </ThemeProvider>
       </Router>
     </div>
   );

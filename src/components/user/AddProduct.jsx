@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
@@ -6,7 +7,6 @@ import {
   Stepper,
   Step,
   StepLabel,
-  TextField,
 } from "@material-ui/core";
 import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
 
@@ -37,14 +37,15 @@ function getSteps() {
   ];
 }
 
-const AddProduct = () => {
+const AddProduct = (props) => {
   const classes = useStyles();
+  const { currentUser } = firebase.auth();
   const [product, setProduct] = useState({
     name: "",
     brand: "",
     description: "",
     state: "",
-    price : "",
+    price: "",
     image: "",
     category: "",
     descriptionExtended: "",
@@ -68,14 +69,10 @@ const AddProduct = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <StepOne product={product} handleChange={handleChange}/>;
+        return <StepOne product={product} handleChange={handleChange} />;
       case 1:
         return <StepTwo />;
       case 2:
@@ -84,6 +81,34 @@ const AddProduct = () => {
         return "Unknown step";
     }
   }
+
+  const validateForm = () => {
+    const {
+      name,
+      brand,
+      description,
+      state,
+      price,
+      category,
+      descriptionExtended,
+    } = product;
+    return !(
+      name &&
+      brand &&
+      description &&
+      state &&
+      price > 0 &&
+      category &&
+      descriptionExtended
+    );
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+    } else {
+      props.history.push("/login");
+    }
+  }, [currentUser, props.history]);
 
   return (
     <Fragment>
@@ -100,16 +125,7 @@ const AddProduct = () => {
           })}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-              Todos los pasos sean completado: has terminado
-              </Typography>
-              <Button onClick={handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
+          {activeStep >= 0 && (
             <div>
               {getStepContent(activeStep)}
               <div>
@@ -118,7 +134,7 @@ const AddProduct = () => {
                   onClick={handleBack}
                   className={classes.button}
                 >
-                  Back
+                  Atras
                 </Button>
 
                 <Button
@@ -126,8 +142,9 @@ const AddProduct = () => {
                   color="primary"
                   onClick={handleNext}
                   className={classes.button}
+                  disabled={validateForm()}
                 >
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  {activeStep === steps.length - 1 ? "Finish" : "Siguiente"}
                 </Button>
               </div>
             </div>
