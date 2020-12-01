@@ -7,14 +7,16 @@ import CameraIcon from "@material-ui/icons/Camera";
 import AlertSnack from "../../AlertSnack";
 import { Link as RouterLink, withRouter } from "react-router-dom";
 import { Link } from "@material-ui/core";
-import Typography from '@material-ui/core/Typography';
+import Typography from "@material-ui/core/Typography";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
     marginLeft: "150px",
-    marginRight: "100px"
+    marginRight: "100px",
   },
   containerAvatar: {
     display: "flex",
@@ -31,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: "25ch",
     },
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
   submit: {
     width: "100%",
@@ -77,7 +83,8 @@ const UserEdit = (props) => {
     variant: "",
   });
   const [image, setImage] = useState(null);
-
+  const [open, setOpen] = useState(false);
+  const [fullname, setFullName] = useState("");
   const handleChangeImage = (e) => {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
@@ -154,6 +161,7 @@ const UserEdit = (props) => {
 
   useEffect(() => {
     if (currentUser) {
+      setOpen(true);
       firebase
         .database()
         .ref(`/users/${currentUser.uid}`)
@@ -161,19 +169,24 @@ const UserEdit = (props) => {
         .then((snapshot) => {
           loadUser(snapshot.key).then((data) => {
             setUser(data);
+            setFullName(data.name + " " + data.lastname)
           });
         });
+      setOpen(false);
     } else {
       props.history.push("/login");
     }
     //eslint-disable-next-line
   }, []);
   return (
-    <div style={{width: "100%"}}>
+    <div style={{ width: "100%" }}>
+      <Backdrop className={classes.backdrop} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className={classes.containerAvatar}>
         <Avatar className={classes.avatar} src={user.avatar} />
         <Typography variant="h5" color="initial">
-          {user.name + " " + user.lastname}
+          {fullname}
         </Typography>
       </div>
       <div className={classes.container}>

@@ -11,6 +11,7 @@ import Chat from './components/user/Chat/Chat';
 import BuysUser from './components/user/BuysUser';
 import UpdatePassword from './components/user/UpdatePassword';
 import Publications from "./components/user/Publications";
+import ListPrevChats from './components/user/Chat/ListPrevChats';
 
 export default function Routes(){
   return(
@@ -26,6 +27,7 @@ export default function Routes(){
       <Route exact path = "/user/chat/" component={Chat}/>
       <Route exact path = "/user/updatepassword/" component={UpdatePassword}/>
       <Route exact path = "/user/publications/" component = {Publications}/>
+      <Route exact path = "/user/chats/" component={ListPrevChats}/>
     </Switch>
   )
 }

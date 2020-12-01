@@ -46,7 +46,7 @@ function App(props) {
             content={
               <ContentDrawer
                 content={<Routes />}
-                listContent={<ListDrawer />}
+                listContent={ user && <ListDrawer name={user.name} lastname={user.lastname} image={user.avatar}/>}
                 user={user}
                 userOptions={user && <User user={user} onLogout={onLogout} />}
               />

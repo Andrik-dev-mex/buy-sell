@@ -1,14 +1,20 @@
 import React, { Fragment } from "react";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import NewReleasesRoundedIcon from "@material-ui/icons/NewReleasesRounded";
 import ListItemText from "@material-ui/core/ListItemText";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { Link } from "react-router-dom";
-import { Tooltip, ListItem, ListItemIcon } from "@material-ui/core";
+import {
+  Tooltip,
+  ListItem,
+  ListItemIcon,
+  List,
+  ListItemAvatar,
+  Avatar,
+  Typography,
+  Divider,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import PublicIcon from "@material-ui/icons/Public";
 import ChatIcon from "@material-ui/icons/Chat";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,12 +26,36 @@ const useStyles = makeStyles((theme) => ({
       color: "black",
     },
   },
+  avatar: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  imageAvatar: {
+    height: "120px",
+    width: "120px"
+  }
 }));
 
-const ListDrawer = ({ id }) => {
+const ListDrawer = ({ image, name, lastname }) => {
   const classes = useStyles();
+  console.log(image);
   return (
     <Fragment>
+      <div className={classes.avatar}>
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar src={image} className={classes.imageAvatar} />
+            </ListItemAvatar>
+          </ListItem>
+        </List>
+      </div>
+      <div className={classes.avatar}>
+        <Typography variant="body1" color="initial">
+          {name + " " + lastname}
+        </Typography>
+      </div>
+      <Divider/>
       <Link to={`/user/edit/`} className={classes.link}>
         <Tooltip title="Ir a Mi Perfil">
           <ListItem button>
@@ -44,7 +74,7 @@ const ListDrawer = ({ id }) => {
           <ListItemText primary="Notificaciones" />
         </ListItem>
       </Link>
-      <Link to={`/user/chat/`} className={classes.link}>
+      <Link to={`/user/chats/`} className={classes.link}>
         <Tooltip title="Ir a Mensajes">
           <ListItem button>
             <ListItemIcon>

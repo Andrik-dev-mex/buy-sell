@@ -1,13 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Typography,
-  Button,
-  Stepper,
-  Step,
-  StepLabel,
-} from "@material-ui/core";
+import { Button, Stepper, Step, StepLabel } from "@material-ui/core";
 import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,11 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-  return [
-    "Datos de Tu producto",
-    "Acepta nuestros terminos y condiciones",
-    "Guarda tu producto",
-  ];
+  return ["Datos de Tu producto", "Vista Previa", "Guarda tu producto"];
 }
 
 const AddProduct = (props) => {
@@ -49,15 +39,25 @@ const AddProduct = (props) => {
     image: "",
     category: "",
     descriptionExtended: "",
-    userID: "",
+    userID: currentUser.uid,
   });
   const [activeStep, setActiveStep] = React.useState(0);
+  const [image, setImage] = useState(null);
   const steps = getSteps();
 
   const handleChange = (e) => {
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleChangeImage = (e) => {
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    setImage({
+      type: file.type.split("/")[1],
+      file,
     });
   };
 
@@ -72,9 +72,15 @@ const AddProduct = (props) => {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <StepOne product={product} handleChange={handleChange} />;
+        return (
+          <StepOne
+            product={product}
+            handleChange={handleChange}
+            handleImage={handleChangeImage}
+          />
+        );
       case 1:
-        return <StepTwo />;
+        return <StepTwo image={image} product={product} />;
       case 2:
         return <StepTree />;
       default:
@@ -91,6 +97,7 @@ const AddProduct = (props) => {
       price,
       category,
       descriptionExtended,
+      typeOfBuy,
     } = product;
     return !(
       name &&
@@ -99,7 +106,9 @@ const AddProduct = (props) => {
       state &&
       price > 0 &&
       category &&
-      descriptionExtended
+      descriptionExtended &&
+      image &&
+      typeOfBuy
     );
   };
 
@@ -109,6 +118,8 @@ const AddProduct = (props) => {
       props.history.push("/login");
     }
   }, [currentUser, props.history]);
+
+  console.log(image);
 
   return (
     <Fragment>
