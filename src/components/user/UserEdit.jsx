@@ -1,60 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import firebase from "../../config/firebase";
 import { loadUser } from "../../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";
-import { Avatar, TextField, Button } from "@material-ui/core";
-import CameraIcon from "@material-ui/icons/Camera";
-import AlertSnack from "../../AlertSnack";
 import { Link as RouterLink, withRouter } from "react-router-dom";
-import { Link } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { Grid, Link, Paper, TextField, Avatar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-    marginLeft: "150px",
-    marginRight: "100px",
-  },
-  containerAvatar: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatar: {
-    height: "150px",
-    width: "150px",
-  },
-  root: {
+  form: {
+    width: "1000px",
     "& > *": {
-      margin: theme.spacing(1),
-      width: "25ch",
+      margin: theme.spacing(2),
     },
   },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: "#fff",
-  },
-  submit: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  input: {
-    display: "none",
-  },
-  button: {
-    marginTop: "20px",
-  },
-  containerLink: {
-    display: "flex",
-    width: "75%",
-    justifyContent: "flex-end",
-  },
+  avatar : {
+    width: 150,
+    height:150
+  }
 }));
 
 const MyLink = React.forwardRef((props, ref) => (
@@ -169,7 +130,7 @@ const UserEdit = (props) => {
         .then((snapshot) => {
           loadUser(snapshot.key).then((data) => {
             setUser(data);
-            setFullName(data.name + " " + data.lastname)
+            setFullName(data.name + " " + data.lastname);
           });
         });
       setOpen(false);
@@ -179,123 +140,22 @@ const UserEdit = (props) => {
     //eslint-disable-next-line
   }, []);
   return (
-    <div style={{ width: "100%" }}>
-      <Backdrop className={classes.backdrop} open={open}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <div className={classes.containerAvatar}>
-        <Avatar className={classes.avatar} src={user.avatar} />
-        <Typography variant="h5" color="initial">
-          {fullname}
-        </Typography>
-      </div>
-      <div className={classes.container}>
-        <form
-          onSubmit={handleSubmit}
-          className={classes.root}
-          validate
-          autoComplete="off"
-        >
-          <TextField
-            label="Nombre"
-            name="name"
-            onChange={handleChange}
-            value={user.name}
-            required
-          />
-          <TextField
-            label="Apellidos"
-            name="lastname"
-            onChange={handleChange}
-            value={user.lastname}
-            required
-          />
-          <TextField
-            label="Correo Electronico"
-            name="email"
-            onChange={handleChange}
-            value={user.email}
-            required
-          />
-          <TextField
-            label="Localidad"
-            name="location"
-            onChange={handleChange}
-            value={user.location}
-            required
-          />
-          <TextField
-            label="Ciudad"
-            name="city"
-            onChange={handleChange}
-            value={user.city}
-            required
-          />
-          <TextField
-            label="Calle"
-            name="street"
-            onChange={handleChange}
-            value={user.street}
-            required
-          />
-          <TextField
-            label="# Interior"
-            name="numberIntStreet"
-            onChange={handleChange}
-            value={user.numberIntStreet}
-          />
-          <TextField
-            label="# Exterior"
-            name="numberExtStreet"
-            onChange={handleChange}
-            value={user.numberExtStreet}
-            required
-          />
-          <TextField
-            label="Telefono"
-            name="phone"
-            onChange={handleChange}
-            value={user.phone}
-            required
-          />
-
-          <label htmlFor="fileImg">
-            <Button
-              variant="outlined"
-              startIcon={<CameraIcon />}
-              component="span"
-              color="secondary"
-              className={classes.button}
-            >
-              Avatar
-            </Button>
-          </label>
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="fileImg"
-            type="file"
-            onChange={handleChangeImage}
-          />
-          <div className={classes.submit}>
-            <Button variant="contained" color="primary" type={"submit"}>
-              Guardar
-            </Button>
-          </div>
-        </form>
-        <AlertSnack
-          message={alertOption.message}
-          open={alertOption.open}
-          variant={alertOption.variant}
-          handleClose={handleClose}
-        />
-      </div>
-      <div className={classes.containerLink}>
-        <Link to={`/user/updatepassword/`} component={MyLink} variant="body2">
-          {"Actualizar Contraseña"}
-        </Link>
-      </div>
-    </div>
+    <Fragment>
+      <Grid
+        container
+        spacing={1}
+        direction="row"
+        justify="center"
+        alignItems="center"
+        alignContent="center"
+        wrap="nowrap"
+      >
+        <Avatar src={user.avatar} className={classes.avatar} />
+      </Grid>
+      <Grid container>
+        <TextField label="nombre"></TextField>
+      </Grid>
+    </Fragment>
   );
 };
 
