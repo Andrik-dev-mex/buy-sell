@@ -34,7 +34,7 @@ function App(props) {
       }
     });
   }, []);
-  console.log(user, id);
+     console.log(user, id);
   return (
     <div>
       <Router>
