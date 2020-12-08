@@ -40,8 +40,18 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textAlign: "center",
-    
   },
+  data: {
+    '& > *' : {
+      marginTop:35,
+    },
+  },
+  containerButton:{
+    height: 300,
+    display: "flex",
+    justifyContent:"center",
+    alignItems:"center"
+  }
 }));
 
 export const StepOne = ({ handleChange, product, handleImage }) => {
@@ -205,19 +215,28 @@ export const StepTwo = ({ image, product }) => {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-            <Typography variant="h6" color="initial">
-                Condición: {product.state === "used" ? " Articulo Usado" : ""} 
-              </Typography>
-              <Typography variant="h5" color="initial">
-                Precio: ${product.price} MXN
-              </Typography>
-              
-              <Typography variant="h5" color="initial">
-                Categoría: {product.category} 
-              </Typography>
-              <Typography variant="h5" color="initial">
-                Modalidad: {product.typeOfBuy === "buy" ? "Venta": "Cambio" } 
-              </Typography>
+              <div className={classes.data}>
+                <Typography variant="h6" color="initial">
+                  Condición: {product.state === "used" ? " Articulo Usado" : ""}
+                </Typography>
+                <Typography variant="h5" color="initial">
+                  Precio: ${product.price} MXN
+                </Typography>
+                <Typography variant="h5" color="initial">
+                  Categoría: {product.category}
+                </Typography>
+                <Typography variant="h5" color="initial">
+                  Modalidad: {product.typeOfBuy === "buy" ? "Venta" : "Cambio"}
+                </Typography>
+                <Button variant="contained" color="primary" fullWidth>
+                  Comprar
+                </Button>
+                <Typography variant="subtitle1" color="initial" justify>
+                  Tus datos estan seguros, puedes realizar tu compra
+                  y pagar con tus targetas visa o mastercard, revisa disponibilidad
+                  de msi con tu banco.
+                </Typography>
+              </div>
             </Grid>
           </Grid>
         </Grid>
@@ -226,6 +245,13 @@ export const StepTwo = ({ image, product }) => {
   );
 };
 
-export const StepTree = () => {
-  return <div></div>;
+export const StepTree = ({click}) => {
+  const classes = useStyles();
+  return (
+    <div className={classes.containerButton}>
+      <Button variant="contained" color="primary" onClick={click}>
+        Guargar Publicacion 
+      </Button>
+    </div>
+  );
 };

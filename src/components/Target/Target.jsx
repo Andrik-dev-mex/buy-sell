@@ -31,13 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Target({name, brand, description, state, price, image, category, descriptionExtended, typeOfBuy, propietary}) {
+export default function Target({name, brand, description, state, price, image, category, descriptionExtended, typeOfBuy}) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   return (
     <Card className={classes.root}>
@@ -45,7 +40,7 @@ export default function Target({name, brand, description, state, price, image, c
         avatar={
             //modificacion
           <Avatar aria-label="recipe" className={classes.avatar}>
-            {propietary.avatar}
+            
           </Avatar>
         }
         title="Shrimp and Chorizo Paella"

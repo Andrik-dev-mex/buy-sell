@@ -39,7 +39,7 @@ const AddProduct = (props) => {
     image: "",
     category: "",
     descriptionExtended: "",
-    typeOfBuy : "",
+    typeOfBuy: "",
     userID: currentUser.uid,
   });
   const [activeStep, setActiveStep] = React.useState(0);
@@ -60,6 +60,31 @@ const AddProduct = (props) => {
       type: file.type.split("/")[1],
       file,
     });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    saveProduct();
+  }
+  const saveProduct = () => {
+    let key = "";
+    firebase.database().ref("/publications")
+    .push(product)
+    .then((res) => {
+      alert("producto Guardado");
+      props.history.push('/');
+      console.log(res);
+      key = res.key;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+    if(image){
+      firebase
+        .storage()
+        .ref("userkio;upo")
+    }
   };
 
   const handleNext = () => {
@@ -83,7 +108,7 @@ const AddProduct = (props) => {
       case 1:
         return <StepTwo image={image} product={product} />;
       case 2:
-        return <StepTree />;
+        return <StepTree click={handleSubmit}/>;
       default:
         return "Unknown step";
     }
