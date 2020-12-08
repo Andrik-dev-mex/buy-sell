@@ -39,6 +39,7 @@ const AddProduct = (props) => {
     image: "",
     category: "",
     descriptionExtended: "",
+    typeOfBuy : "",
     userID: currentUser.uid,
   });
   const [activeStep, setActiveStep] = React.useState(0);
