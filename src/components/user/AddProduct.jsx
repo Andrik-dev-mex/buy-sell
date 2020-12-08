@@ -1,13 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
+import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Typography,
-  Button,
-  Stepper,
-  Step,
-  StepLabel,
-  TextField,
-} from "@material-ui/core";
+import { Button, Stepper, Step, StepLabel } from "@material-ui/core";
 import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,33 +24,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-  return [
-    "Datos de Tu producto",
-    "Acepta nuestros terminos y condiciones",
-    "Guarda tu producto",
-  ];
+  return ["Datos de Tu producto", "Vista Previa", "Guarda tu producto"];
 }
 
-const AddProduct = () => {
+const AddProduct = (props) => {
   const classes = useStyles();
+  const { currentUser } = firebase.auth();
   const [product, setProduct] = useState({
     name: "",
     brand: "",
     description: "",
     state: "",
-    price : "",
+    price: "",
     image: "",
     category: "",
     descriptionExtended: "",
-    userID: "",
+    userID: currentUser.uid,
   });
   const [activeStep, setActiveStep] = React.useState(0);
+  const [image, setImage] = useState(null);
   const steps = getSteps();
 
   const handleChange = (e) => {
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleChangeImage = (e) => {
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    setImage({
+      type: file.type.split("/")[1],
+      file,
     });
   };
 
@@ -68,22 +69,57 @@ const AddProduct = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <StepOne product={product} handleChange={handleChange}/>;
+        return (
+          <StepOne
+            product={product}
+            handleChange={handleChange}
+            handleImage={handleChangeImage}
+          />
+        );
       case 1:
-        return <StepTwo />;
+        return <StepTwo image={image} product={product} />;
       case 2:
         return <StepTree />;
       default:
         return "Unknown step";
     }
   }
+
+  const validateForm = () => {
+    const {
+      name,
+      brand,
+      description,
+      state,
+      price,
+      category,
+      descriptionExtended,
+      typeOfBuy,
+    } = product;
+    return !(
+      name &&
+      brand &&
+      description &&
+      state &&
+      price > 0 &&
+      category &&
+      descriptionExtended &&
+      image &&
+      typeOfBuy
+    );
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+    } else {
+      props.history.push("/login");
+    }
+  }, [currentUser, props.history]);
+
+  console.log(image);
 
   return (
     <Fragment>
@@ -100,16 +136,7 @@ const AddProduct = () => {
           })}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-              Todos los pasos sean completado: has terminado
-              </Typography>
-              <Button onClick={handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
+          {activeStep >= 0 && (
             <div>
               {getStepContent(activeStep)}
               <div>
@@ -118,7 +145,7 @@ const AddProduct = () => {
                   onClick={handleBack}
                   className={classes.button}
                 >
-                  Back
+                  Atras
                 </Button>
 
                 <Button
@@ -126,8 +153,9 @@ const AddProduct = () => {
                   color="primary"
                   onClick={handleNext}
                   className={classes.button}
+                  disabled={validateForm()}
                 >
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  {activeStep === steps.length - 1 ? "Finish" : "Siguiente"}
                 </Button>
               </div>
             </div>

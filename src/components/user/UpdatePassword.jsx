@@ -91,6 +91,7 @@ const UpdatePassword = (props) => {
 
   console.log(secret);
   return (
+    
     <div className={classes.container}>
       <Typography variant="h3" color="initial">
         Actualizar Contraseña
@@ -131,6 +132,7 @@ const UpdatePassword = (props) => {
         handleClose={handleClose}
       />
     </div>
+    
   );
 };
 
