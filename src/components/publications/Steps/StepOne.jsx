@@ -1,19 +1,19 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import {
+  Paper,
+  Grid,
   TextField,
   FormControl,
   InputLabel,
   Select,
-  Grid,
-  Paper,
-  Radio,
-  Button,
   MenuItem,
-  Typography,
-} from "@material-ui/core";
+  Button,
+  Radio
+}
+from "@material-ui/core"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     "& > *": {
       margin: theme.spacing(2),
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const StepOne = ({ handleChange, product, handleImage }) => {
+const StepOne = ({ handleChange, product, handleImage }) => {
   const classes = useStyles();
   document.title = "Nueva Publicación";
   console.log(product);
@@ -196,62 +196,4 @@ export const StepOne = ({ handleChange, product, handleImage }) => {
   );
 };
 
-export const StepTwo = ({ image, product }) => {
-  const URL_IMAGE = URL.createObjectURL(image.file);
-  const classes = useStyles();
-  return (
-    <Paper elevation={3} style={{ padding: 12 }}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
-              <img src={URL_IMAGE} alt="product" className={classes.image} />
-              <Typography
-                variant="subtitle1"
-                color="initial"
-                className={classes.title}
-              >
-                {product.name} {product.brand}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <div className={classes.data}>
-                <Typography variant="h6" color="initial">
-                  Condición: {product.state === "used" ? " Articulo Usado" : ""}
-                </Typography>
-                <Typography variant="h5" color="initial">
-                  Precio: ${product.price} MXN
-                </Typography>
-                <Typography variant="h5" color="initial">
-                  Categoría: {product.category}
-                </Typography>
-                <Typography variant="h5" color="initial">
-                  Modalidad: {product.typeOfBuy === "buy" ? "Venta" : "Cambio"}
-                </Typography>
-                <Button variant="contained" color="primary" fullWidth>
-                  Comprar
-                </Button>
-                <Typography variant="subtitle1" color="initial" justify>
-                  Tus datos estan seguros, puedes realizar tu compra
-                  y pagar con tus targetas visa o mastercard, revisa disponibilidad
-                  de msi con tu banco.
-                </Typography>
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-};
-
-export const StepTree = ({click}) => {
-  const classes = useStyles();
-  return (
-    <div className={classes.containerButton}>
-      <Button variant="contained" color="primary" onClick={click}>
-        Guargar Publicacion 
-      </Button>
-    </div>
-  );
-};
+export default StepOne;

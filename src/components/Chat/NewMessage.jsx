@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles'
-import firebase from "../../../config/firebase";
+import firebase from "../../config/firebase";
 
 const useStyles = makeStyles((theme) => ({
     root: {

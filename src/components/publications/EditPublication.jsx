@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import firebase from "../../config/firebase";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import Products from "./Product";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditProduct = (props) => {
+const EditPublication = (props) => {
   const classes = useStyles();
   const [product, setProduct] = useState({
     sku: "",
@@ -198,4 +197,4 @@ console.log(product);
   );
 };
 
-export default withRouter(EditProduct);
+export default withRouter(EditPublication);

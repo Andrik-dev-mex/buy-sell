@@ -2,7 +2,9 @@ import React, { Fragment, useState, useEffect } from "react";
 import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Stepper, Step, StepLabel } from "@material-ui/core";
-import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
+import StepOne from "./Steps/StepOne";
+import StepTwo from "./Steps/StepTwo";
+import StepTree from "./Steps/StepTree";
 import AlertSnack from "../../AlertSnack";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +30,7 @@ function getSteps() {
   return ["Datos de Tu producto", "Vista Previa", "Guarda tu producto"];
 }
 
-const AddProduct = (props) => {
+const AddPublication = (props) => {
   const classes = useStyles();
 
   const { currentUser } = firebase.auth();
@@ -45,6 +47,7 @@ const AddProduct = (props) => {
     typeOfBuy: "",
     propietary: {
       name: "",
+      image: "",
       userID: "",
     },
   });
@@ -120,6 +123,7 @@ const AddProduct = (props) => {
         ...product,
         propietary: {
           name: currentUser.displayName.split(" ")[0],
+          image: currentUser.photoURL,
           userID: currentUser.uid,
         },
       })
@@ -256,4 +260,4 @@ const AddProduct = (props) => {
   );
 };
 
-export default AddProduct;
+export default AddPublication;

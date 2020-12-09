@@ -42,6 +42,17 @@ const Publication = (props) => {
 
   useEffect(() => {
     if (currentUser) {
+      const refPublications = firebase.database().ref("/publications");
+
+      refPublications.orderByChild("propietary/userID").equalTo(currentUser.uid).on(
+        "child_added",
+        (snapshot) => {
+          console.log(snapshot.val());
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     } else {
       props.history.push("/login");
     }

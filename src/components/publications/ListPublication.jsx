@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function ListProducts({ title, id, sku,  urlImage, nameProduct, description, oldImage, onDelete, price}) {
+export default function ListPublication({ title, id, sku,  urlImage, nameProduct, description, oldImage, onDelete, price}) {
   const classes = useStyles();
   return (
     <div>

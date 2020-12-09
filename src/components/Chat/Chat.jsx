@@ -8,10 +8,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import firebase from "../../../config/firebase";
+import firebase from "../../config/firebase";
 import NewMessage from './NewMessage';
-import CustomAvatar from '../CustomAvatar';
-import {loadUser} from '../../../utils/dbUtils';
+import CustomAvatar from '../user/CustomAvatar';
+import {loadUser} from '../../utils/dbUtils';
 
 const useStyles = makeStyles((theme) => ({
     text: {
