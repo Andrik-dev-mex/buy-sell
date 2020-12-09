@@ -11,11 +11,10 @@ function Home(props) {
 
   const addPublication = (publication) => {
     publications.push(publication);
-    setPublications({
-      ...publications,
-      publications,
-    });
+
+    setPublications({...publications, publication})
   };
+
   console.log(currentUser);
   useEffect(() => {
     if (currentUser) {
@@ -24,11 +23,15 @@ function Home(props) {
         "child_added",
         (snapshot) => {
           const newPublication = snapshot.val();
-          loadPublication(snapshot.key).then((resolve) => {
-            console.log(resolve);
-            newPublication.image = resolve.image;
-            addPublication(newPublication);
-          });
+          loadPublication(snapshot.key)
+            .then((res) => {
+              newPublication.image = res.image;
+              addPublication(newPublication);
+              console.log(publications);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         },
         (error) => {
           console.log(error);

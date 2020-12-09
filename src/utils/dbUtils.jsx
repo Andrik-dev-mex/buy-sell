@@ -1,5 +1,6 @@
-import firebase from "../config/firebase";
-
+import firebase from "firebase/app"
+import "firebase/storage";
+import "firebase/database"
 
 export const loadUser = (uid) => {
   return new Promise((resolve, reject) => {
