@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
   },
   link: {
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 }));
 
 const Publication = (props) => {
@@ -55,7 +55,7 @@ const Publication = (props) => {
         </Typography>
       </div>
       <div className={classes.containerElements}>
-        <Link to ="/user/addproduct"className={classes.link}>
+        <Link to="/user/addproduct" className={classes.link}>
           <Button variant="contained" color="primary">
             Nueva Publicación
           </Button>

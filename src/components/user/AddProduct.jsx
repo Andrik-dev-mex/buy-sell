@@ -3,6 +3,7 @@ import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Stepper, Step, StepLabel } from "@material-ui/core";
 import { StepOne, StepTwo, StepTree } from "../../components/user/Steps";
+import AlertSnack from "../../AlertSnack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +30,9 @@ function getSteps() {
 
 const AddProduct = (props) => {
   const classes = useStyles();
+
   const { currentUser } = firebase.auth();
+
   const [product, setProduct] = useState({
     name: "",
     brand: "",
@@ -40,10 +43,33 @@ const AddProduct = (props) => {
     category: "",
     descriptionExtended: "",
     typeOfBuy: "",
-    userID: currentUser.uid,
+    propietary: {
+      name: "",
+      userID: "",
+    },
   });
+
+  const [alertOptions, setAlertOptions] = useState({
+    open: false,
+    variant: "",
+    message: "",
+  });
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOptions({
+      ...alertOptions,
+      open: false,
+    });
+  };
+
   const [activeStep, setActiveStep] = React.useState(0);
+
   const [image, setImage] = useState(null);
+
   const steps = getSteps();
 
   const handleChange = (e) => {
@@ -65,26 +91,60 @@ const AddProduct = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     saveProduct();
-  }
-  const saveProduct = () => {
-    let key = "";
-    firebase.database().ref("/publications")
-    .push(product)
-    .then((res) => {
-      alert("producto Guardado");
-      props.history.push('/');
-      console.log(res);
-      key = res.key;
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  };
 
-    if(image){
+  const saveProduct = () => {
+    const randomId = Math.random().toString(36).substring(2);
+    if (image) {
+      product.image = `${randomId}.${image.type}`;
       firebase
         .storage()
-        .ref("userkio;upo")
+        .ref(`/images/${product.image}`)
+        .put(image.file)
+        .then((snapshot) => {
+          firebase
+            .storage()
+            .ref()
+            .child(`/images/${product.image}`)
+            .getDownloadURL()
+            .then((url) => {
+              setProduct({ ...product, image: url });
+            });
+        });
     }
+
+    firebase
+      .database()
+      .ref("/publications")
+      .push({
+        ...product,
+        propietary: {
+          name: currentUser.displayName.split(" ")[0],
+          userID: currentUser.uid,
+        },
+      })
+      .then(() => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Publicacion Guardada",
+          variant: "success",
+        });
+        setTimeout(() => {
+          props.history.push("/user/publications");
+        }, 1500);
+      })
+      .catch((error) => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Error al guargar la publicación",
+          variant : "error"
+        });
+        setTimeout(() => {
+          props.history.push("/user/publications");
+        }, 1500);
+      });
   };
 
   const handleNext = () => {
@@ -108,7 +168,7 @@ const AddProduct = (props) => {
       case 1:
         return <StepTwo image={image} product={product} />;
       case 2:
-        return <StepTree click={handleSubmit}/>;
+        return <StepTree click={handleSubmit} />;
       default:
         return "Unknown step";
     }
@@ -144,8 +204,6 @@ const AddProduct = (props) => {
       props.history.push("/login");
     }
   }, [currentUser, props.history]);
-
-  console.log(image);
 
   return (
     <Fragment>
@@ -188,6 +246,12 @@ const AddProduct = (props) => {
           )}
         </div>
       </div>
+      <AlertSnack
+        open={alertOptions.open}
+        message={alertOptions.message}
+        variant={alertOptions.variant}
+        handleClose={handleClose}
+      />
     </Fragment>
   );
 };
