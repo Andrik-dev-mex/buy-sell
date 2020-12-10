@@ -48,6 +48,8 @@ const Publication = (props) => {
   };
 
   const deletePublication = (keyID) => {
+
+    //borrar objeto de firebase
     firebase
       .database()
       .ref()
