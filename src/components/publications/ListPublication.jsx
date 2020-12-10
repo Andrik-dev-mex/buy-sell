@@ -1,67 +1,36 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {  Link } from "react-router-dom";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
+import {
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  Button,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  inline: {
-    display: "inline",
-  },
-  button: {
-    marginRight: "5px"
-  },
-  link: {
-    textDecoration: "none",
-    color: "white",
-    
-  },
+  button : {
+    marginRight: 5,
+  }
 }));
 
-
-export default function ListPublication({ title, id, sku,  urlImage, nameProduct, description, oldImage, onDelete, price}) {
+export default function ListPublication({ name, createAt, imageURL, deletePublication, keyID }) {
   const classes = useStyles();
   return (
-    <div>
-      <ListItem alignItems="flex-start">
+    <Fragment>
+      <ListItem>
         <ListItemAvatar>
-          <Avatar src={urlImage} alt = {title}/>
+          <Avatar src={imageURL}/>
         </ListItemAvatar>
-        <ListItemText
-          primary={nameProduct}
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                {"sku: " + sku + " | $"}{price}
-              </Typography>
-              { " - " + description}
-              
-            </React.Fragment>
-          }
-        />
-        <ListItemSecondaryAction>
-          <Button variant="contained" color="primary" className={classes.button}>
-            <Link to={"/editProductos/:uid"} className={classes.link}>
-            Editar
-            </Link>
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => {onDelete(id, oldImage)}}>
-            Eliminar
-          </Button>
-        </ListItemSecondaryAction>
+        <ListItemText primary={name} secondary={createAt} />
+        <Button variant="contained" color="primary" className={classes.button}>
+          Editar
+        </Button>
+        <Button variant="contained" color="secondary" onClick={(e) => {deletePublication(e, key)}}>
+          Eliminar
+        </Button>
       </ListItem>
-      <Divider variant="inset" component="li" />
-      </div>
+    </Fragment>
   );
-};
+}

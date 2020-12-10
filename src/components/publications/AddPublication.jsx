@@ -32,7 +32,7 @@ function getSteps() {
 
 const AddPublication = (props) => {
   const classes = useStyles();
-
+  const fecha = new Date();
   const { currentUser } = firebase.auth();
 
   const [product, setProduct] = useState({
@@ -50,6 +50,8 @@ const AddPublication = (props) => {
       image: "",
       userID: "",
     },
+    createAt: "",
+    key: ""
   });
 
   const [alertOptions, setAlertOptions] = useState({
@@ -58,6 +60,7 @@ const AddPublication = (props) => {
     message: "",
   });
 
+  
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -121,6 +124,7 @@ const AddPublication = (props) => {
       .ref("/publications")
       .push({
         ...product,
+        createAt: `${fecha.getDate()}/${fecha.getMonth()}/${fecha.getFullYear()}`,
         propietary: {
           name: currentUser.displayName.split(" ")[0],
           image: currentUser.photoURL,
@@ -143,7 +147,7 @@ const AddPublication = (props) => {
           ...alertOptions,
           open: true,
           message: "Error al guargar la publicación",
-          variant : "error"
+          variant: "error",
         });
         setTimeout(() => {
           props.history.push("/user/publications");

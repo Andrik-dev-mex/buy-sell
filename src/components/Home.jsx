@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home(props) {
+  const fecha = new Date();
   document.title = "Inicio";
   const classes = useStyles();
   const { currentUser } = firebase.auth();

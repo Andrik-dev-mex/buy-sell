@@ -1,9 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, List, ListItem, ListItemAvatar } from "@material-ui/core/";
+import { Typography, List, Paper, Button } from "@material-ui/core/";
 import firebase from "../../config/firebase";
-import { Avatar, ListItemText, Button } from "@material-ui/core";
+import ListPublication from "./ListPublication";
+import { loadPublication } from "../../utils/dbUtils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,35 +30,68 @@ const useStyles = makeStyles((theme) => ({
 const Publication = (props) => {
   const classes = useStyles();
   const { currentUser } = firebase.auth();
-  const [publications, setPublications] = useState([]);
+  const [view, setView] = useState({
+    publications: [],
+  });
 
   const addPublication = (publication) => {
-    publications.push(publication);
+    view.publications.push(publication);
 
-    setPublications({
-      ...publications,
-      publications,
+    setView({
+      ...view,
     });
   };
+
+  const handleDelete = (e, keyID) => {
+    e.preventDefault();
+    deletePublication(keyID);
+  };
+
+  const deletePublication = (keyID) => {
+    firebase
+      .database()
+      .ref()
+      .child(`/publications/${keyID}`)
+      .remove()
+      .then(() => {
+        alert("Borrardo");
+        props.history.push("/");
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
 
   useEffect(() => {
     if (currentUser) {
       const refPublications = firebase.database().ref("/publications");
 
-      refPublications.orderByChild("propietary/userID").equalTo(currentUser.uid).on(
-        "child_added",
-        (snapshot) => {
-          console.log(snapshot.val());
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      refPublications
+        .orderByChild("propietary/userID")
+        .equalTo(currentUser.uid)
+        .on(
+          "child_added",
+          (snapshot) => {
+            console.log(snapshot.val());
+            const newPublication = snapshot.val();
+            newPublication.oldImage = newPublication.image;
+            newPublication.key = snapshot.key;
+            loadPublication(snapshot.key).then((response) => {
+              newPublication.image = response.image;
+              addPublication(newPublication);
+            });
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     } else {
       props.history.push("/login");
     }
+    //eslint-disable-next-line
   }, [currentUser, props]);
 
+  console.log(view)
   return (
     <Fragment>
       <div className={classes.container}>
@@ -73,31 +107,23 @@ const Publication = (props) => {
         </Link>
       </div>
       <div className={classes.containerElements}>
-        <List className={classes.root}>
-          <ListItem
-            button
-            onClick={() => {
-              alert("me has tocado, cochino =/");
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Work" secondary="Jan 7, 2014" />
-          </ListItem>
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Vacation" secondary="July 20, 2014" />
-          </ListItem>
-        </List>
+        {view.publications.length > 0 && (
+          <Paper elevation={3} style={{ width: "100%", marginTop: "1em" }}>
+            <List className={classes.root}>
+              {view.publications &&
+                view.publications.map((publication, index) => (
+                  <ListPublication
+                    key={index}
+                    name={publication.name}
+                    imageURL={publication.image}
+                    createAt={publication.createAt}
+                    keyID={publication.key}
+                    deletePublication={handleDelete}
+                  />
+                ))}
+            </List>
+          </Paper>
+        )}
       </div>
     </Fragment>
   );
