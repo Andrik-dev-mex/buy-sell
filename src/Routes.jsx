@@ -12,6 +12,7 @@ import UpdatePassword from "./components/user/UpdatePassword";
 import Publications from "./components/publications/Publications";
 import ListPrevChats from "./components/Chat/ListPrevChats";
 import EditPublication from "./components/publications/EditPublication";
+import ViewPublication from "./components/publications/ViewPublication";
 
 export default function Routes() {
   return (
@@ -28,6 +29,7 @@ export default function Routes() {
       <Route exact path="/user/publications/" component={Publications} />
       <Route exact path="/user/chats/" component={ListPrevChats} />
       <Route exat path ="/user/publication/edit/:id" component={EditPublication}/>
+      <Route exact path ="/user/view/publication/:id" component={ViewPublication}/>
     </Switch>
   );
 }

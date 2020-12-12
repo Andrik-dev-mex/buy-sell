@@ -8,6 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import { Button, CardActions } from "@material-ui/core";
+import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 300
@@ -29,23 +30,23 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  link: {
+    textDecoration: "none",
+    width: "100%"
+  }
 }));
 
-export default function Target({
+export default function CardPublication({
   name,
-  brand,
   description,
-  state,
   price,
   image,
-  category,
-  descriptionExtended,
-  typeOfBuy,
   namePropietary,
   imagePropietary,
+  keyID
 }) {
   const classes = useStyles();
-
+  console.log(keyID);
   return (
     <Card className={classes.root} >
       <CardHeader
@@ -75,9 +76,11 @@ export default function Target({
         </Typography>
       </CardContent>
       <CardActions>
+        <Link to={`/user/view/publication/${keyID}`} className={classes.link}>
         <Button variant="contained" color="secondary" fullWidth>
-          Ver mas
+          Ver
         </Button>
+        </Link>
       </CardActions>
     </Card>
   );

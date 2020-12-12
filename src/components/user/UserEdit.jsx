@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState} from "react";
 import firebase from "../../config/firebase";
 import { loadUser } from "../../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";

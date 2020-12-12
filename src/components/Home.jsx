@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import firebase from "../config/firebase";
-import Card from "./Card/Card";
 import { loadPublication } from "../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";
+import CardPublication from "./Card/CardPublication";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,6 +32,7 @@ function Home(props) {
         const newPublication = snapshot.val();
         loadPublication(snapshot.key)
           .then((res) => {
+            newPublication.key = snapshot.key;
             newPublication.image = res.image;
             container.push(newPublication);
             setView({
@@ -41,7 +42,6 @@ function Home(props) {
           })
           .catch((error) => {
             console.log(error);
-            
           });
       },
       (error) => {
@@ -54,13 +54,15 @@ function Home(props) {
     //eslint-disable-next-line
   }, []);
 
+  console.log(view.publications);
   return (
     <Fragment>
       <div className={classes.container}>
         {view.publications &&
           view.publications.map((publi, index) => (
-            <Card
+            <CardPublication
               name={publi.name}
+              key={index}
               brand={publi.brand}
               description={publi.description}
               state={publi.state}
@@ -69,6 +71,7 @@ function Home(props) {
               category={publi.category}
               descriptionExtended={publi.descriptionExtended}
               typeOfBuy={publi.typeOfBuy}
+              keyID = {publi.key}
               namePropietary={publi.propietary.name}
               imagePropietary={publi.propietary.image}
             />
