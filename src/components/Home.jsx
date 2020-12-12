@@ -17,23 +17,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home(props) {
-  const fecha = new Date();
   document.title = "Inicio";
   const classes = useStyles();
-  const { currentUser } = firebase.auth();
   const [view, setView] = useState({
     publications: [],
   });
 
   useEffect(() => {
-    if (currentUser) {
-    } else {
-      props.history.push("/login");
-    }
-    //eslint-disable-next-line
-  }, [currentUser, props]);
-
-  useEffect(() => {
+    const container = [];
     const publicationRef = firebase.database().ref("/publications");
     publicationRef.on(
       "child_added",
@@ -42,15 +33,22 @@ function Home(props) {
         loadPublication(snapshot.key)
           .then((res) => {
             newPublication.image = res.image;
-            view.publications.push(newPublication);
-            setView({ ...view });
+            container.push(newPublication);
+            setView({
+              ...view,
+              publications: container
+            });
           })
           .catch((error) => {
             console.log(error);
+            
           });
       },
       (error) => {
         console.log(error);
+        if(error.message.includes("permission_denied")){
+          props.history.push("/login");
+        }
       }
     );
     //eslint-disable-next-line

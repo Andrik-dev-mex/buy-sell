@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {
   ListItem,
   ListItemAvatar,
@@ -12,10 +12,14 @@ import {
 const useStyles = makeStyles((theme) => ({
   button : {
     marginRight: 5,
+  },
+  link: {
+    textDecoration : "none",
+    color: "white",
   }
 }));
 
-export default function ListPublication({ name, createAt, imageURL, deletePublication, keyID }) {
+function ListPublication({ name, createAt, imageURL, deletePublication, keyID, index }) {
   const classes = useStyles();
   return (
     <Fragment>
@@ -24,13 +28,17 @@ export default function ListPublication({ name, createAt, imageURL, deletePublic
           <Avatar src={imageURL}/>
         </ListItemAvatar>
         <ListItemText primary={name} secondary={createAt} />
+        <Link to={`/user/publication/edit/${keyID}`} className={classes.link}>
         <Button variant="contained" color="primary" className={classes.button}>
           Editar
         </Button>
-        <Button variant="contained" color="secondary" onClick={(e) => {deletePublication(e, keyID)}}>
+        </Link>
+        <Button variant="contained" color="secondary" onClick={(e) => {deletePublication(e, keyID, index)}}>
           Eliminar
         </Button>
       </ListItem>
     </Fragment>
   );
 }
+
+export default withRouter(ListPublication);

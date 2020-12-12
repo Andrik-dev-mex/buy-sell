@@ -144,7 +144,6 @@ function Login(props) {
       });
   };
 
-  console.log(currentUser);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />

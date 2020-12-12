@@ -1,54 +1,161 @@
-import React, { useState} from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import {
+  Paper,
+  Grid,
+  TextField,
+  MenuItem,
+  Radio,
+  Select,
+  Button,
+  FormControl,
+  InputLabel,
+} from "@material-ui/core";
 import firebase from "../../config/firebase";
-import IconButton from "@material-ui/core/IconButton";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import AlertSnack from "../../AlertSnack";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "100ch",
+    "& > *": {
+      margin: theme.spacing(2),
     },
   },
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  formControl: {
+    margin: theme.spacing(0),
   },
-  containerTwo: {
-    display: "flex",
-    alignItems: "flex-end",
+  selectEmpty: {
+    marginTop: theme.spacing(1),
+  },
+  container: {
+    padding: "1em",
   },
   input: {
     display: "none",
   },
   button: {
-    marginLeft: "10px",
+    marginTop: 10,
+  },
+  image: {
+    width: "100%",
+    height: "450px",
+  },
+  title: {
+    textAlign: "center",
+  },
+  data: {
+    "& > *": {
+      marginTop: 35,
+    },
+  },
+  containerButton: {
+    height: 300,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerSubmit: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
 const EditPublication = (props) => {
   const classes = useStyles();
+  const { id } = props.match.params;
+  const db = firebase.database();
+  const storage = firebase.storage();
+  const refPublication = db.ref(`/publications/${id}`);
+
   const [product, setProduct] = useState({
-    sku: "",
     name: "",
+    brand: "",
     description: "",
-    stock: "",
+    state: "",
     price: "",
     image: "",
+    category: "",
+    descriptionExtended: "",
+    typeOfBuy: "",
+    propietary: {
+      name: "",
+      image: "",
+      userID: "",
+    },
+    createAt: "",
+    key: "",
   });
 
-  const [image, setImage] = useState([]);
+  const [alertOptions, setAlertOptions] = useState({
+    open: false,
+    variant: "",
+    message: "",
+  });
 
-  const { id } = props.match.params;
+  const [image, setImage] = useState(null);
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOptions({
+      ...alertOptions,
+      open: false,
+    });
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    updatePublication();
+  };
+
+  const updatePublication = () => {
+    if (image) {
+      const name = product.image;
+      storage
+        .ref(`/images/${name}`)
+        .put(image.file)
+        .then(() => console.log("img nueva"))
+        .catch(error => {
+          if(error.message.includes("permission_denied")){
+            props.history.push("/login");
+          }
+        })
+    }
+
+    refPublication
+      .update(product)
+      .then(() => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Publicación Actualizada",
+          variant: "success",
+        });
+        setTimeout(() => {
+          props.history.push("/user/publications");
+        }, 1000);
+      })
+      .catch((error) => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Error al actualizar",
+          variant: "error",
+        });
+        if (error.message.includes("permission_denied")) {
+          props.history.push("/login");
+        }
+      });
+  };
 
   const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
+    setProduct({
+      ...product,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleChangeImage = (e) => {
@@ -60,140 +167,172 @@ const EditPublication = (props) => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(image);
-    if (!product.image) {
-      product.image = `${product.sku}.${image.type}`;
-      firebase
-        .storage()
-        .ref(`/images/${product.image}`)
-        .put(image.file)
-        .then(() => {
-          firebase
-            .storage()
-            .ref()
-            .child(`/images/${product.image}`)
-            .getDownloadURL()
-            .then((url) => {
-              setProduct({ ...product, image: url });
-            });
-        });
-    }
-    firebase
-    .database()
-    .ref(`/products/${id}`)
-    .update(product)
-    .once("value")
-    .then((snapshot) => {
-        setProduct(snapshot.val());
-      })
-    .catch((error) => {
-      if (error) {
-        console.log(error);
-        
+  useEffect(() => {
+    refPublication.on(
+      "value",
+      (snapshot) => {
+        const data = snapshot.val();
+        setProduct(data);
+      },
+      (error) => {
+        if (error.message.includes("permission_denied")) {
+          props.history.push("/login");
+        }
       }
-    }, []);
-};
-console.log(product);
-  return (
-   <div className={classes.container}>
-      <form
-        className={classes.root}
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <TextField
-            name="sku"
-            label="sku"
-            multiline
-            rowsMax={4}
-            onChange={handleChange}
-            value={product.sku}
-            variant="outlined"
-          />
-          <TextField
-            name="name"
-            label="producto"
-            multiline
-            rowsMax={4}
-            value={product.name}
-            onChange={handleChange}
-            variant="outlined"
-          />
-          <TextField
-            name="description"
-            label="descripción"
-            multiline
-            rowsMax={4}
-            onChange={handleChange}
-            value={product.description}
-            variant="outlined"
-          />
-        </div>
-        <div>
-          <TextField
-            name="stock"
-            label="stock"
-            multiline
-            rowsMax={4}
-            value={product.stock}
-            onChange={handleChange}
-            variant="outlined"
-          />
-          <TextField
-            name="price"
-            label="precio"
-            multiline
-            rowsMax={4}
-            onChange={handleChange}
-            value={product.price}
-            variant="outlined"
-          />
-          <div className={classes.containerTwo}>
-            <label htmlFor="fileImg">
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
-              </IconButton>
-            </label>
-            <input
-              accept="image/*"
-              className={classes.input}
-              id="fileImg"
-              type="file"
-              onChange={handleChangeImage}
-            />
-            <label htmlFor="fileImage">
-              <Button variant="contained" color="primary" component="span">
-                Subir Imagen
-              </Button>
-            </label>
-            <input
-              accept="image/*"
-              className={classes.input}
-              id="fileImage"
-              type="file"
-              onChange={handleChangeImage}
-            />
+    );
 
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              type="submit"
-            >
-              Guardar
-            </Button>
-          </div>
-        </div>
-      </form>
-    </div>
+    return function cleanup() {
+      setProduct({});
+    };
+    //eslint-disable-next-line
+  }, [id]);
+
+  return (
+    <form className={classes.root}>
+      <Paper elevation={3}>
+        <Grid container className={classes.container}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <TextField
+                  label="Nombre"
+                  name="name"
+                  value={product.name}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label="Marca"
+                  name="brand"
+                  value={product.brand}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label="Descripción"
+                  name="description"
+                  value={product.description}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+                <FormControl className={classes.formControl} fullWidth required>
+                  <InputLabel id="demo-simple-select-label">
+                    Categoria
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="category"
+                    value={product.category}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"Electronica"}>Electronica</MenuItem>
+                    <MenuItem value={"Casa y Hogar"}>Casa y Hogar</MenuItem>
+                    <MenuItem value={"Vehiculos"}>Vehiculos</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl className={classes.formControl} fullWidth required>
+                  <InputLabel id="demo-simple-select">Condicion</InputLabel>
+                  <Select
+                    labelId="demo-simple-select"
+                    id="demo-simple-select1"
+                    name="state"
+                    value={product.state}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"new"}>Nuevo</MenuItem>
+                    <MenuItem value={"used"}>Usado</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  label="Precio"
+                  name="price"
+                  value={product.price}
+                  type={"number"}
+                  onChange={handleChange}
+                  InputProps={{ inputProps: { min: 1 } }}
+                  fullWidth
+                  required
+                />
+                <label htmlFor="fileImage">
+                  <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                    fullWidth
+                  >
+                    Subir Imagen
+                  </Button>
+                </label>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="fileImage"
+                  type="file"
+                  onChange={handleChangeImage}
+                />
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Radio
+                      checked={product.typeOfBuy === "buy"}
+                      onChange={handleChange}
+                      value="buy"
+                      name="typeOfBuy"
+                      inputProps={{ "aria-label": "Venta" }}
+                      id="buy"
+                    />
+                    <label htmlFor="buy">Venta</label>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Radio
+                      id="change"
+                      checked={product.typeOfBuy === "change"}
+                      onChange={handleChange}
+                      value="change"
+                      name="typeOfBuy"
+                      inputProps={{ "aria-label": "Cambio" }}
+                    />
+                    <label htmlFor="change">Cambio</label>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Descripción Larga"
+                      multiline
+                      rows={14}
+                      name="descriptionExtended"
+                      value={product.descriptionExtended}
+                      variant="outlined"
+                      onChange={handleChange}
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+      <div className={classes.containerSubmit}>
+        <Button variant="contained" color="primary" onClick={handleUpdate}>
+          Guardar
+        </Button>
+      </div>
+      <AlertSnack
+        open={alertOptions.open}
+        message={alertOptions.message}
+        variant={alertOptions.variant}
+        handleClose={handleClose}
+      />
+    </form>
   );
 };
 

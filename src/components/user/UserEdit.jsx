@@ -3,19 +3,43 @@ import firebase from "../../config/firebase";
 import { loadUser } from "../../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink, withRouter } from "react-router-dom";
-import { Grid, Link, Paper, TextField, Avatar } from "@material-ui/core";
+import { Link } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Avatar,
+  Typography,
+  Grid,
+  Paper,
+} from "@material-ui/core";
+import AlertSnack from "../../AlertSnack";
+import { Camera as CameraIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
+  avatar: {
+    height: 150,
+    width: 150,
+    marginBottom: 5,
+  },
+  container: {
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
   form: {
-    width: "1000px",
     "& > *": {
-      margin: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
   },
-  avatar : {
-    width: 150,
-    height:150
-  }
+  button: {
+    marginTop: 10,
+  },
+  input: {
+    display: "none",
+  },
 }));
 
 const MyLink = React.forwardRef((props, ref) => (
@@ -23,8 +47,13 @@ const MyLink = React.forwardRef((props, ref) => (
 ));
 
 const UserEdit = (props) => {
+  document.title = "Editar Mis Datos";
   const classes = useStyles();
+
   const { currentUser } = firebase.auth();
+  const db = firebase.database();
+  const storage = firebase.storage();
+
   const [user, setUser] = useState({
     name: "",
     lastname: "",
@@ -38,14 +67,17 @@ const UserEdit = (props) => {
     numberExtStreet: "",
     phone: "",
   });
+
   const [alertOption, setAlertOptions] = useState({
     open: false,
     message: "",
     variant: "",
   });
+
   const [image, setImage] = useState(null);
-  const [open, setOpen] = useState(false);
+
   const [fullname, setFullName] = useState("");
+
   const handleChangeImage = (e) => {
     if (!e.target.files[0]) return;
     const file = e.target.files[0];
@@ -79,10 +111,10 @@ const UserEdit = (props) => {
   };
 
   const updateUser = () => {
+    const refUser = db.ref(`/users/${currentUser.uid}`);
     if (image) {
       user.avatar = `${currentUser.uid}.${image.type}`;
-      firebase
-        .storage()
+      storage
         .ref(`/avatars/${user.avatar}`)
         .put(image.file)
         .then(() => {
@@ -97,8 +129,7 @@ const UserEdit = (props) => {
         });
     }
 
-    const userRef = firebase.database().ref(`/users/${currentUser.uid}`);
-    userRef
+    refUser
       .update(user)
       .then((response) => {
         setAlertOptions({
@@ -122,40 +153,151 @@ const UserEdit = (props) => {
 
   useEffect(() => {
     if (currentUser) {
-      setOpen(true);
-      firebase
-        .database()
-        .ref(`/users/${currentUser.uid}`)
-        .once("value")
-        .then((snapshot) => {
+      const refUser = db.ref(`/users/${currentUser.uid}`);
+      refUser.on(
+        "value",
+        (snapshot) => {
           loadUser(snapshot.key).then((data) => {
             setUser(data);
             setFullName(data.name + " " + data.lastname);
           });
-        });
-      setOpen(false);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     } else {
       props.history.push("/login");
     }
     //eslint-disable-next-line
-  }, []);
+  }, [currentUser]);
+
   return (
-    <Fragment>
-      <Grid
-        container
-        spacing={1}
-        direction="row"
-        justify="center"
-        alignItems="center"
-        alignContent="center"
-        wrap="nowrap"
-      >
+    <Grid container direction="column" justify="center" alignItems="center">
+      <Paper className={classes.container} elevation={3}>
+        <Typography variant="h4" color="initial">
+          Mis Datos Personales
+        </Typography>
         <Avatar src={user.avatar} className={classes.avatar} />
-      </Grid>
-      <Grid container>
-        <TextField label="nombre"></TextField>
-      </Grid>
-    </Fragment>
+        <Typography variant='subtitle1' color="initial">
+          {fullname}
+        </Typography>
+        <Link to="/user/updatepassword" component={MyLink}>
+          {"Actualizar mi Contraseña"}
+        </Link>
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <TextField
+            label="Nombre"
+            name="name"
+            onChange={handleChange}
+            value={user.name}
+            variant="outlined"
+            fullWidth
+            required
+          />
+          <TextField
+            label="Apellidos"
+            name="lastname"
+            onChange={handleChange}
+            variant="outlined"
+            value={user.lastname}
+            fullWidth
+            required
+          />
+          <TextField
+            variant="outlined"
+            label="Correo Electronico"
+            name="email"
+            onChange={handleChange}
+            value={user.email}
+            fullWidth
+            required
+          />
+          <TextField
+            variant="outlined"
+            label="Localidad"
+            name="location"
+            fullWidth
+            onChange={handleChange}
+            value={user.location}
+            required
+          />
+          <TextField
+            variant="outlined"
+            label="Ciudad"
+            name="city"
+            fullWidth
+            onChange={handleChange}
+            value={user.city}
+            required
+          />
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Calle"
+            name="street"
+            onChange={handleChange}
+            value={user.street}
+            required
+          />
+          <TextField
+            variant="outlined"
+            label="# Interior"
+            fullWidth
+            name="numberIntStreet"
+            onChange={handleChange}
+            value={user.numberIntStreet}
+          />
+          <TextField
+            variant="outlined"
+            label="# Exterior"
+            name="numberExtStreet"
+            fullWidth
+            onChange={handleChange}
+            value={user.numberExtStreet}
+            required
+          />
+          <TextField
+            variant="outlined"
+            label="Telefono"
+            name="phone"
+            fullWidth
+            onChange={handleChange}
+            value={user.phone}
+            required
+          />
+
+          <label htmlFor="fileImg">
+            <Button
+              variant="contained"
+              startIcon={<CameraIcon />}
+              component="span"
+              color="secondary"
+              className={classes.button}
+              fullWidth
+            >
+              Avatar
+            </Button>
+          </label>
+          <input
+            accept="image/*"
+            className={classes.input}
+            id="fileImg"
+            type="file"
+            onChange={handleChangeImage}
+          />
+          <Button fullWidth variant="contained" color="primary" type="submit">
+            Guardar
+          </Button>
+        </form>
+      </Paper>
+      <AlertSnack
+      open={alertOption.open}
+      message={alertOption.message}
+      variant={alertOption.variant}
+      handleClose={handleClose}
+      />
+    </Grid>
   );
 };
 

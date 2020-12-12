@@ -16,6 +16,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import ChatIcon from "@material-ui/icons/Chat";
+import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -32,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
   },
   imageAvatar: {
     height: "120px",
-    width: "120px"
-  }
+    width: "120px",
+  },
 }));
 
 const ListDrawer = ({ image, name, lastname }) => {
@@ -55,7 +56,17 @@ const ListDrawer = ({ image, name, lastname }) => {
           {name + " " + lastname}
         </Typography>
       </div>
-      <Divider/>
+      <Divider />
+      <Link to={`/`} className={classes.link}>
+        <Tooltip title="Ir a Inicio">
+          <ListItem button>
+            <ListItemIcon>
+              <HomeIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Inicio" />
+          </ListItem>
+        </Tooltip>
+      </Link>
       <Link to={`/user/edit/`} className={classes.link}>
         <Tooltip title="Ir a Mi Perfil">
           <ListItem button>

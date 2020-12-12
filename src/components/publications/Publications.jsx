@@ -29,8 +29,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Publication = (props) => {
+  document.title = "Mis Publicaciones"
   const classes = useStyles();
-  const { currentUser } = firebase.auth();
+  const {currentUser} = firebase.auth();
   const [view, setView] = useState({
     publications: [],
   });
@@ -38,23 +39,59 @@ const Publication = (props) => {
     open: false,
     variant: "",
     message: "",
-  })
+  });
 
-  const addPublication = (publication) => {
-    view.publications.push(publication);
+  const handleDelete = (e, keyID, index) => {
+    e.preventDefault();
+    deletePublication(keyID, index);
+  };
 
-    setView({
-      ...view,
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOptions({
+      ...alertOptions,
+      open: false,
     });
   };
 
-  const handleDelete = (e, keyID) => {
-    e.preventDefault();
-    deletePublication(keyID);
+  const deletePublication = (keyID, index) => {
+    //borrar imagen de firebase
+    firebase
+    .auth();
+    //borrar objeto de firebase
+    firebase
+      .database()
+      .ref()
+      .child(`/publications/${keyID}`)
+      .remove()
+      .then(() => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Publicacion eliminada con exito",
+          variant: "success",
+        });
+        view.publications.splice(index, 1);
+        setView({ ...view });
+      })
+      .catch(() => {
+        setAlertOptions({
+          ...alertOptions,
+          open: true,
+          message: "Publicación no eliminada",
+          variant: "error",
+        });
+      });
   };
 
-  const getPublications = () => {
-    const refPublications = firebase.database().ref("/publications");
+  useEffect(() => {
+    const container = [];
+    
+    if (currentUser) {
+      const refPublications = firebase.database().ref("/publications");
 
       refPublications
         .orderByChild("propietary/userID")
@@ -68,63 +105,24 @@ const Publication = (props) => {
             newPublication.key = snapshot.key;
             loadPublication(snapshot.key).then((response) => {
               newPublication.image = response.image;
-              addPublication(newPublication);
+              container.push(newPublication);
+              setView({
+                ...view,
+                publications: container,
+              });
             });
           },
           (error) => {
+            if (error.message.includes("permission_denied")) {
+              props.history.push("/login");
+            }
             console.log(error);
           }
         );
-  }
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setAlertOptions({
-      ...alertOptions,
-      open : false,
-    });
-  };
-
-  const deletePublication = (keyID) => {
-    //borrar imagen de firebase
-
-    //borrar objeto de firebase
-    firebase
-      .database()
-      .ref()
-      .child(`/publications/${keyID}`)
-      .remove()
-      .then(() => {
-        setAlertOptions({
-          ...alertOptions,
-            open: true,
-            message: "Publicacion eliminada con exito",
-            variant : "success"
-        });
-      })
-      .catch(() => {
-        setAlertOptions({
-          ...alertOptions,
-            open: true,
-            message: "Publicación no eliminada",
-            variant : "error"
-        });
-      })
-    }
-
-  useEffect(() => {
-    if (currentUser) {
-      getPublications();
-    } else {
-      props.history.push("/login");
     }
     //eslint-disable-next-line
-  }, [currentUser, props]);
+  }, [currentUser]);
 
-  console.log(view)
   return (
     <Fragment>
       <div className={classes.container}>
@@ -147,6 +145,7 @@ const Publication = (props) => {
                 view.publications.map((publication, index) => (
                   <ListPublication
                     key={index}
+                    index={index}
                     name={publication.name}
                     imageURL={publication.image}
                     createAt={publication.createAt}

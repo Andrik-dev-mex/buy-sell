@@ -28,6 +28,7 @@ const UpdatePassword = (props) => {
     password: "",
     verifypassword: "",
   });
+  
   const [alertOptions, setAlertOptions] = useState({
     open: false,
     variant: "",
@@ -91,22 +92,25 @@ const UpdatePassword = (props) => {
 
   console.log(secret);
   return (
-    
     <div className={classes.container}>
-      <Typography variant="h3" color="initial">
+      <Typography variant="h4" color="initial">
         Actualizar Contraseña
       </Typography>
       <form className={classes.root} onSubmit={handleSubmit}>
         <div>
           <TextField
+            type="password"
             label="Contraseña"
             name="password"
+            variant="outlined"
             onChange={handleChange}
             error={secret.password !== secret.verifypassword}
           />
         </div>
         <div>
           <TextField
+            type="password"
+            variant="outlined"
             label="Repite tu Contraseña"
             name="verifypassword"
             onChange={handleChange}
@@ -132,7 +136,6 @@ const UpdatePassword = (props) => {
         handleClose={handleClose}
       />
     </div>
-    
   );
 };
 

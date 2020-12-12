@@ -7,10 +7,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
+import { Button, CardActions } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
-    minWidth: 250,
+    width: 300
   },
   media: {
     height: 0,
@@ -47,7 +47,7 @@ export default function Target({
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} >
       <CardHeader
         avatar={
           //modificacion
@@ -60,7 +60,7 @@ export default function Target({
         title={namePropietary}
         subheader=""
       />
-      <CardMedia
+      <CardMedia 
         className={classes.media}
         //modificacion
         image={image}
@@ -74,6 +74,11 @@ export default function Target({
           {description}
         </Typography>
       </CardContent>
+      <CardActions>
+        <Button variant="contained" color="secondary" fullWidth>
+          Ver mas
+        </Button>
+      </CardActions>
     </Card>
   );
 }
