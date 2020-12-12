@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
       return;
     }
 
-    setAlertData({
-      ...alertData,
+    setAlertOptions({
+      ...alertOptions,
       open : false,
     });
   };

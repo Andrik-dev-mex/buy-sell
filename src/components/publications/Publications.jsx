@@ -5,6 +5,7 @@ import { Typography, List, Paper, Button } from "@material-ui/core/";
 import firebase from "../../config/firebase";
 import ListPublication from "./ListPublication";
 import { loadPublication } from "../../utils/dbUtils";
+import AlertSnack from "../../AlertSnack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,11 @@ const Publication = (props) => {
   const [view, setView] = useState({
     publications: [],
   });
+  const [alertOptions, setAlertOptions] = useState({
+    open: false,
+    variant: "",
+    message: "",
+  })
 
   const addPublication = (publication) => {
     view.publications.push(publication);
@@ -47,26 +53,8 @@ const Publication = (props) => {
     deletePublication(keyID);
   };
 
-  const deletePublication = (keyID) => {
-
-    //borrar objeto de firebase
-    firebase
-      .database()
-      .ref()
-      .child(`/publications/${keyID}`)
-      .remove()
-      .then(() => {
-        alert("Borrardo");
-        props.history.push("/");
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    }
-
-  useEffect(() => {
-    if (currentUser) {
-      const refPublications = firebase.database().ref("/publications");
+  const getPublications = () => {
+    const refPublications = firebase.database().ref("/publications");
 
       refPublications
         .orderByChild("propietary/userID")
@@ -87,6 +75,49 @@ const Publication = (props) => {
             console.log(error);
           }
         );
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOptions({
+      ...alertOptions,
+      open : false,
+    });
+  };
+
+  const deletePublication = (keyID) => {
+    //borrar imagen de firebase
+
+    //borrar objeto de firebase
+    firebase
+      .database()
+      .ref()
+      .child(`/publications/${keyID}`)
+      .remove()
+      .then(() => {
+        setAlertOptions({
+          ...alertOptions,
+            open: true,
+            message: "Publicacion eliminada con exito",
+            variant : "success"
+        });
+      })
+      .catch(() => {
+        setAlertOptions({
+          ...alertOptions,
+            open: true,
+            message: "Publicación no eliminada",
+            variant : "error"
+        });
+      })
+    }
+
+  useEffect(() => {
+    if (currentUser) {
+      getPublications();
     } else {
       props.history.push("/login");
     }
@@ -127,6 +158,12 @@ const Publication = (props) => {
           </Paper>
         )}
       </div>
+      <AlertSnack
+        open={alertOptions.open}
+        message={alertOptions.message}
+        variant={alertOptions.variant}
+        handleClose={handleClose}
+      />
     </Fragment>
   );
 };

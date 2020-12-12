@@ -59,7 +59,6 @@ const AddPublication = (props) => {
     variant: "",
     message: "",
   });
-
   
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

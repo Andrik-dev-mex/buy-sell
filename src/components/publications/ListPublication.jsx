@@ -27,7 +27,7 @@ export default function ListPublication({ name, createAt, imageURL, deletePublic
         <Button variant="contained" color="primary" className={classes.button}>
           Editar
         </Button>
-        <Button variant="contained" color="secondary" onClick={(e) => {deletePublication(e, key)}}>
+        <Button variant="contained" color="secondary" onClick={(e) => {deletePublication(e, keyID)}}>
           Eliminar
         </Button>
       </ListItem>
