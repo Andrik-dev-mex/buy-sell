@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import firebase from "../../config/firebase";
 import { loadUser } from "../../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import AlertSnack from "../../AlertSnack";
 import { Camera as CameraIcon } from "@material-ui/icons";
+import Loading from "../Card/Loading";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -77,6 +78,8 @@ const UserEdit = (props) => {
   const [image, setImage] = useState(null);
 
   const [fullname, setFullName] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const handleChangeImage = (e) => {
     if (!e.target.files[0]) return;
@@ -154,12 +157,14 @@ const UserEdit = (props) => {
   useEffect(() => {
     if (currentUser) {
       const refUser = db.ref(`/users/${currentUser.uid}`);
+      setLoading(true);
       refUser.on(
         "value",
         (snapshot) => {
           loadUser(snapshot.key).then((data) => {
             setUser(data);
             setFullName(data.name + " " + data.lastname);
+            setLoading(false);
           });
         },
         (error) => {
@@ -179,7 +184,7 @@ const UserEdit = (props) => {
           Mis Datos Personales
         </Typography>
         <Avatar src={user.avatar} className={classes.avatar} />
-        <Typography variant='subtitle1' color="initial">
+        <Typography variant="subtitle1" color="initial">
           {fullname}
         </Typography>
         <Link to="/user/updatepassword" component={MyLink}>
@@ -292,11 +297,12 @@ const UserEdit = (props) => {
         </form>
       </Paper>
       <AlertSnack
-      open={alertOption.open}
-      message={alertOption.message}
-      variant={alertOption.variant}
-      handleClose={handleClose}
+        open={alertOption.open}
+        message={alertOption.message}
+        variant={alertOption.variant}
+        handleClose={handleClose}
       />
+      <Loading open={loading} />
     </Grid>
   );
 };

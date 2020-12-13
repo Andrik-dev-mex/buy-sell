@@ -4,6 +4,7 @@ import firebase from "../config/firebase";
 import { loadPublication } from "../utils/dbUtils";
 import { makeStyles } from "@material-ui/core/styles";
 import CardPublication from "./Card/CardPublication";
+import Loading from "./Card/Loading";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -23,9 +24,12 @@ function Home(props) {
     publications: [],
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const container = [];
     const publicationRef = firebase.database().ref("/publications");
+    setLoading(true);
     publicationRef.on(
       "child_added",
       (snapshot) => {
@@ -37,8 +41,9 @@ function Home(props) {
             container.push(newPublication);
             setView({
               ...view,
-              publications: container
+              publications: container,
             });
+            setLoading(false);
           })
           .catch((error) => {
             console.log(error);
@@ -46,19 +51,21 @@ function Home(props) {
       },
       (error) => {
         console.log(error);
-        if(error.message.includes("permission_denied")){
+        if (error.message.includes("permission_denied")) {
           props.history.push("/login");
         }
       }
     );
+
     //eslint-disable-next-line
   }, []);
 
   console.log(view.publications);
   return (
     <Fragment>
+      <Loading open={loading} />
       <div className={classes.container}>
-        {view.publications &&
+        {view.publications.length > 0 &&
           view.publications.map((publi, index) => (
             <CardPublication
               name={publi.name}
@@ -71,7 +78,7 @@ function Home(props) {
               category={publi.category}
               descriptionExtended={publi.descriptionExtended}
               typeOfBuy={publi.typeOfBuy}
-              keyID = {publi.key}
+              keyID={publi.key}
               namePropietary={publi.propietary.name}
               imagePropietary={publi.propietary.image}
             />

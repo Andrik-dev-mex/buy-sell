@@ -6,6 +6,7 @@ import firebase from "../../config/firebase";
 import ListPublication from "./ListPublication";
 import { loadPublication } from "../../utils/dbUtils";
 import AlertSnack from "../../AlertSnack";
+import Loading from "../Card/Loading";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,17 +30,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Publication = (props) => {
-  document.title = "Mis Publicaciones"
+  document.title = "Mis Publicaciones";
   const classes = useStyles();
-  const {currentUser} = firebase.auth();
+  const { currentUser } = firebase.auth();
+
   const [view, setView] = useState({
     publications: [],
   });
+
   const [alertOptions, setAlertOptions] = useState({
     open: false,
     variant: "",
     message: "",
   });
+
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = (e, keyID, index) => {
     e.preventDefault();
@@ -59,8 +64,7 @@ const Publication = (props) => {
 
   const deletePublication = (keyID, index) => {
     //borrar imagen de firebase
-    firebase
-    .auth();
+    firebase.auth();
     //borrar objeto de firebase
     firebase
       .database()
@@ -89,10 +93,10 @@ const Publication = (props) => {
 
   useEffect(() => {
     const container = [];
-    
+
     if (currentUser) {
       const refPublications = firebase.database().ref("/publications");
-
+      setLoading(true);
       refPublications
         .orderByChild("propietary/userID")
         .equalTo(currentUser.uid)
@@ -110,6 +114,7 @@ const Publication = (props) => {
                 ...view,
                 publications: container,
               });
+              setLoading(false);
             });
           },
           (error) => {
@@ -163,6 +168,7 @@ const Publication = (props) => {
         variant={alertOptions.variant}
         handleClose={handleClose}
       />
+      <Loading open={loading} />
     </Fragment>
   );
 };
