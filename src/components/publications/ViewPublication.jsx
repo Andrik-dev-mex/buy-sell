@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import firebase from "../../config/firebase";
 import { loadPublication } from "../../utils/dbUtils";
 import { Grid, Button, Paper, Typography, Divider } from "@material-ui/core";
