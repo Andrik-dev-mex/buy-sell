@@ -44,8 +44,6 @@ const Publication = (props) => {
     message: "",
   });
 
-  const [loading, setLoading] = useState(false);
-
   const handleDelete = (e, keyID, index) => {
     e.preventDefault();
     deletePublication(keyID, index);
@@ -96,7 +94,6 @@ const Publication = (props) => {
 
     if (currentUser) {
       const refPublications = firebase.database().ref("/publications");
-      setLoading(true);
       refPublications
         .orderByChild("propietary/userID")
         .equalTo(currentUser.uid)
@@ -114,13 +111,13 @@ const Publication = (props) => {
                 ...view,
                 publications: container,
               });
-              setLoading(false);
+
             })
             .catch(error => {
               console.log(error);
-              setLoading(false)
+
             });
-            setLoading(false);
+
           },
           (error) => {
             if (error.message.includes("permission_denied")) {
@@ -173,7 +170,6 @@ const Publication = (props) => {
         variant={alertOptions.variant}
         handleClose={handleClose}
       />
-      <Loading open={loading} />
     </Fragment>
   );
 };
