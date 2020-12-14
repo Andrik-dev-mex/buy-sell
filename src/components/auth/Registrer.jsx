@@ -110,7 +110,6 @@ function Registrer(props) {
         props.history.push("/");
       })
       .catch((error) => {
-        console.log(error);
         //alert(error.message);
         setAlertOptions({
           variant: "error",

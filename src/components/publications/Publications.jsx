@@ -100,7 +100,6 @@ const Publication = (props) => {
         .on(
           "child_added",
           (snapshot) => {
-            console.log(snapshot.val());
             const newPublication = snapshot.val();
             newPublication.oldImage = newPublication.image;
             newPublication.key = snapshot.key;
@@ -114,7 +113,7 @@ const Publication = (props) => {
 
             })
             .catch(error => {
-              console.log(error);
+              
 
             });
 
@@ -123,7 +122,7 @@ const Publication = (props) => {
             if (error.message.includes("permission_denied")) {
               props.history.push("/login");
             }
-            console.log(error);
+           
           }
         );
     }

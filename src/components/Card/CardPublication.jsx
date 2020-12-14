@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 300
+    width: 300,
   },
   media: {
     height: 0,
@@ -43,11 +43,11 @@ export default function CardPublication({
   price,
   image,
   namePropietary,
+  lastnamePropietary,
   imagePropietary,
   keyID
 }) {
   const classes = useStyles();
-  console.log(keyID);
   return (
     <Card className={classes.root} >
       <CardHeader
@@ -59,7 +59,7 @@ export default function CardPublication({
             className={classes.avatar}
           ></Avatar>
         }
-        title={namePropietary}
+        title={namePropietary + " " + lastnamePropietary}
         subheader=""
       />
       <CardMedia 

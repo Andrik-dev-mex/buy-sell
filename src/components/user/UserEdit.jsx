@@ -145,7 +145,6 @@ const UserEdit = (props) => {
         }, 2000);
       })
       .catch((error) => {
-        console.log(error);
         setAlertOptions({
           open: true,
           message: "Error al actulizar usuario",
@@ -168,7 +167,6 @@ const UserEdit = (props) => {
           });
         },
         (error) => {
-          console.log(error);
         }
       );
     } else {

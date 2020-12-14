@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import firebase from "../../config/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Stepper, Step, StepLabel } from "@material-ui/core";
+import { loadUser } from "../../utils/dbUtils";
 import StepOne from "./Steps/StepOne";
 import StepTwo from "./Steps/StepTwo";
 import StepTree from "./Steps/StepTree";
@@ -33,7 +34,6 @@ function getSteps() {
 const AddPublication = (props) => {
   const classes = useStyles();
   const fecha = new Date();
-  const { currentUser } = firebase.auth();
 
   const [product, setProduct] = useState({
     name: "",
@@ -47,6 +47,7 @@ const AddPublication = (props) => {
     typeOfBuy: "",
     propietary: {
       name: "",
+      lastname: "",
       image: "",
       userID: "",
     },
@@ -56,6 +57,14 @@ const AddPublication = (props) => {
     },
     createAt: "",
     key: "",
+  });
+
+  const [user, setUser] = useState({
+    name: "",
+    lastname: "",
+    avatar: "",
+    key: "",
+    location: "",
   });
 
   const [alertOptions, setAlertOptions] = useState({
@@ -129,14 +138,16 @@ const AddPublication = (props) => {
         ...product,
         createAt: `${fecha.getDate()}/${fecha.getMonth()}/${fecha.getFullYear()}`,
         propietary: {
-          name: currentUser.displayName.split(" ")[0],
-          image: currentUser.photoURL,
-          userID: currentUser.uid,
+          name: user.name,
+          lastname: user.lastname,
+          image: user.avatar,
+          location: user.location,
+          userID: user.key,
         },
-        toSearch:{
+        toSearch: {
           name: product.name.toLowerCase(),
           brand: product.brand.toLowerCase(),
-        }
+        },
       })
       .then(() => {
         setAlertOptions({
@@ -188,7 +199,7 @@ const AddPublication = (props) => {
         return "Unknown step";
     }
   }
-
+  
   const validateForm = () => {
     const {
       name,
@@ -214,11 +225,33 @@ const AddPublication = (props) => {
   };
 
   useEffect(() => {
-    if (currentUser) {
-    } else {
-      props.history.push("/login");
-    }
-  }, [currentUser, props.history]);
+    const { currentUser } = firebase.auth();
+    firebase
+      .database()
+      .ref(`/users/${currentUser.uid}`)
+      .on("value", (snapshot) => {
+        let newUser = snapshot.val();
+        newUser.key = snapshot.key;
+        loadUser(snapshot.key)
+          .then((res) => {
+            newUser.avatar = res.avatar;
+            setUser({
+              ...user,
+              name: newUser.name,
+              lastname: newUser.lastname,
+              avatar: newUser.avatar,
+              key: newUser.key,
+              location: newUser.location,
+            });
+          })
+          .catch((error) => {
+            if (error.message.includes("permission_denied")) {
+              props.history.push("/login");
+            }
+          });
+      });
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <Fragment>
@@ -252,9 +285,9 @@ const AddPublication = (props) => {
                   color="primary"
                   onClick={handleNext}
                   className={classes.button}
-                  disabled={validateForm()}
+                  disabled={validateForm() || activeStep === 2}
                 >
-                  {activeStep === steps.length - 1 ? "Finish" : "Siguiente"}
+                  {activeStep === steps.length -1 ? "Finish" : "Siguiente"}
                 </Button>
               </div>
             </div>

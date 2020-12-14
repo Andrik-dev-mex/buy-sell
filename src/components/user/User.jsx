@@ -28,7 +28,7 @@ const User = (props) => {
         props.history.push("/login");
       });
   };
-  console.log(props.user);
+
   return (
     <div>
       <IconButton

@@ -99,7 +99,6 @@ const ViewPublication = (props) => {
           .catch((error) => {});
       },
       (error) => {
-        console.log(error);
         if (error.message.includes("permission_denied")) {
           props.history.push("/login");
         }
@@ -111,7 +110,6 @@ const ViewPublication = (props) => {
     };
     //eslint-disable-next-line
   }, []);
-  console.log(publication);
   return (
     <Fragment>
       <Loading open={loading} />
@@ -143,6 +141,9 @@ const ViewPublication = (props) => {
                 </Typography>
                 <Typography variant="h5" color="initial">
                   {"Vendedor: " + publication.propietary.name}
+                </Typography>
+                <Typography variant="h5" color="initial">
+                  {"Ubicaciòn: " + publication.propietary.location}
                 </Typography>
                 <Typography variant="h5" color="initial">
                   {"Precio: $" + publication.price}

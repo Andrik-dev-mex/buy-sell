@@ -62,7 +62,6 @@ const UpdatePassword = (props) => {
     currentUser
       .updatePassword(secret.password)
       .then((response) => {
-        console.log(response);
         setAlertOptions({
           open: true,
           message: "Contraseña Actualizada con exito",
@@ -73,7 +72,6 @@ const UpdatePassword = (props) => {
         }, 3000);
       })
       .catch((error) => {
-        console.log(error);
         setAlertOptions({
           open: true,
           message: "Error al actualizar la contraseña",
@@ -89,8 +87,6 @@ const UpdatePassword = (props) => {
       ? false
       : true;
   };
-
-  console.log(secret);
   return (
     <div className={classes.container}>
       <Typography variant="h4" color="initial">

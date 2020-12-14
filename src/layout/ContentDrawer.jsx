@@ -99,7 +99,6 @@ const ContentDrawer = (props) => {
     setOpen(true);
   };
 
-  console.log(props.user);
   return (
     <Fragment>
       <AppBar
@@ -127,14 +126,6 @@ const ContentDrawer = (props) => {
             </Typography>
           </Link>
           <div className={classes.containerR}>
-            <div>
-              <IconButton aria-label="messages" style={{color: "white"}}>
-                <EmailIcon  />
-              </IconButton>
-              <IconButton aria-label="notification" style={{color: "white"}}>
-                <NotificationsIcon  />
-              </IconButton>
-            </div>
             {props.userOptions}
           </div>
         </Toolbar>

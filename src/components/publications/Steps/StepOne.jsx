@@ -57,7 +57,6 @@ const useStyles = makeStyles(theme => ({
 const StepOne = ({ handleChange, product, handleImage }) => {
   const classes = useStyles();
   document.title = "Nueva Publicación";
-  console.log(product);
   return (
     <form className={classes.root}>
       <Paper elevation={3}>

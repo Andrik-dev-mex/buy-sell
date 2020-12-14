@@ -64,8 +64,6 @@ const Chat = ({history}) => {
                  });
             },
             error => {
-                // aqui se me muestra el error
-                console.log(error);
                 //aqui es para redireccionar a login
                 if(error.message.includes('permission_denied')) {
                     history.push('/login');

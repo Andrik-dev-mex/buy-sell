@@ -47,7 +47,6 @@ const NewMessage = () => {
             setMessage('');
         })
         .catch(error => {
-            console.log(error);
             alert(error.message);
         });
     };

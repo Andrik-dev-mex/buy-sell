@@ -14,8 +14,6 @@ import {
   Divider,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import ChatIcon from "@material-ui/icons/Chat";
 import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ListDrawer = ({ image, name, lastname }) => {
   const classes = useStyles();
-  console.log(image);
   return (
     <Fragment>
       <div className={classes.avatar}>
@@ -74,24 +71,6 @@ const ListDrawer = ({ image, name, lastname }) => {
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary="Mi Perfil" />
-          </ListItem>
-        </Tooltip>
-      </Link>
-      <Link to={`/user/notifications/`} className={classes.link}>
-        <ListItem button>
-          <ListItemIcon>
-            <NotificationsActiveIcon />
-          </ListItemIcon>
-          <ListItemText primary="Notificaciones" />
-        </ListItem>
-      </Link>
-      <Link to={`/user/chats/`} className={classes.link}>
-        <Tooltip title="Ir a Mensajes">
-          <ListItem button>
-            <ListItemIcon>
-              <ChatIcon />
-            </ListItemIcon>
-            <ListItemText primary="Mensajes" />
           </ListItem>
         </Tooltip>
       </Link>

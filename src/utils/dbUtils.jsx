@@ -25,7 +25,6 @@ export const loadUser = (uid) => {
                 resolve(userData);
               },
               (error) => {
-                console.log(userData);
                 resolve(userData);
               }
             );
@@ -47,7 +46,6 @@ export function loadPublication(id) {
       .once("value")
       .then((snapshot) => {
         const productData = snapshot.val();
-        console.log(productData);
         //aqui se valida si tiene asciada una imagen de avatar
         if (productData.image) {
           //cargar url de avatar
@@ -60,11 +58,9 @@ export function loadPublication(id) {
               (url) => {
                 //aqui se actuliza el atrivuto avatar
                 productData.image = url;
-                console.log(url);
                 resolve(productData);
               },
               (error) => {
-                console.log(productData);
                 resolve(productData);
               }
             );
@@ -86,7 +82,6 @@ export function loadProduct(id) {
       .once("value")
       .then((snapshot) => {
         const productData = snapshot.val();
-        console.log(productData);
         //aqui se valida si tiene asciada una imagen de avatar
         if (productData.image) {
           //cargar url de avatar
@@ -99,11 +94,9 @@ export function loadProduct(id) {
               (url) => {
                 //aqui se actuliza el atrivuto avatar
                 productData.image = url;
-                console.log(url);
                 resolve(productData);
               },
               (error) => {
-                console.log(productData);
                 resolve(productData);
               }
             );

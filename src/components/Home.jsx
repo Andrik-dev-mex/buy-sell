@@ -71,7 +71,6 @@ function Home(props) {
       .on("child_added", (snapshot) => {
         const newPublication = snapshot.val();
         newPublication.key = snapshot.key;
-        console.log(snapshot);
         loadPublication(snapshot.key)
           .then((data) => {
             newPublication.image = data.image;
@@ -83,18 +82,18 @@ function Home(props) {
             setLoading(false);
           })
           .catch((error) => {
-            console.log(error);
           });
       });
   };
-  console.log(query.search);
+
   useEffect(() => {
     const container = [];
     const publicationRef = firebase.database().ref("/publications");
-    setLoading(true);
+    
     publicationRef.on(
       "child_added",
       (snapshot) => {
+        setLoading(true);
         const newPublication = snapshot.val();
         loadPublication(snapshot.key)
           .then((res) => {
@@ -108,11 +107,9 @@ function Home(props) {
             setLoading(false);
           })
           .catch((error) => {
-            console.log(error);
           });
       },
       (error) => {
-        console.log(error);
         if (error.message.includes("permission_denied")) {
           props.history.push("/login");
         }
@@ -122,7 +119,6 @@ function Home(props) {
     //eslint-disable-next-line
   }, []);
 
-  console.log(view.publications);
   return (
     <Fragment>
       <Loading open={loading} />
@@ -136,7 +132,7 @@ function Home(props) {
             className={classes.text}
             variant="standard"
           />
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button variant="contained" color="primary" className={classes.button} type="submit">
             Buscar
           </Button>
         </form>
@@ -157,6 +153,7 @@ function Home(props) {
               typeOfBuy={publi.typeOfBuy}
               keyID={publi.key}
               namePropietary={publi.propietary.name}
+              lastnamePropietary={publi.propietary.lastname}
               imagePropietary={publi.propietary.image}
             />
           ))}
