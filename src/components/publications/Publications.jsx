@@ -6,7 +6,7 @@ import firebase from "../../config/firebase";
 import ListPublication from "./ListPublication";
 import { loadPublication } from "../../utils/dbUtils";
 import AlertSnack from "../../AlertSnack";
-import Loading from "../Card/Loading";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
