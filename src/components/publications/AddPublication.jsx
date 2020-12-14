@@ -50,8 +50,12 @@ const AddPublication = (props) => {
       image: "",
       userID: "",
     },
+    toSearch: {
+      name: "",
+      brand: "",
+    },
     createAt: "",
-    key: ""
+    key: "",
   });
 
   const [alertOptions, setAlertOptions] = useState({
@@ -59,7 +63,7 @@ const AddPublication = (props) => {
     variant: "",
     message: "",
   });
-  
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -129,6 +133,10 @@ const AddPublication = (props) => {
           image: currentUser.photoURL,
           userID: currentUser.uid,
         },
+        toSearch:{
+          name: product.name.toLowerCase(),
+          brand: product.brand.toLowerCase(),
+        }
       })
       .then(() => {
         setAlertOptions({

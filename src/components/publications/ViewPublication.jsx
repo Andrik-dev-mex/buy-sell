@@ -1,11 +1,12 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import firebase from "../../config/firebase";
 import { loadPublication } from "../../utils/dbUtils";
 import { Grid, Button, Paper, Typography, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AlertSnack from "../../AlertSnack";
 import Loading from "../Card/Loading";
+import Dialog from "../Card/Dialog";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   image2: {
     width: "100%",
     height: 70,
-    
+
     border: 1,
     borderRadius: 10,
     borderStyle: "solid",
@@ -70,7 +71,17 @@ const ViewPublication = (props) => {
     key: "",
   });
 
+  const [openDialog, setOpenDialog] = useState(false);
+
   const [loading, setLoading] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -104,6 +115,7 @@ const ViewPublication = (props) => {
   return (
     <Fragment>
       <Loading open={loading} />
+      <Dialog open = {openDialog} handleClose={handleClose}/>
       <Grid container>
         <Grid item xs={12}>
           <Paper elevation={3} className={classes.paper}>
@@ -132,7 +144,10 @@ const ViewPublication = (props) => {
                 <Typography variant="h5" color="initial">
                   {"Vendedor: " + publication.propietary.name}
                 </Typography>
-                <Divider/>
+                <Typography variant="h5" color="initial">
+                  {"Precio: $" + publication.price}
+                </Typography>
+                <Divider />
                 <Typography variant="h5" color="textSecondary">
                   {"Fecha de Pub: " + publication.createAt}
                 </Typography>
@@ -142,7 +157,7 @@ const ViewPublication = (props) => {
                 <Typography variant="h5" color="textSecondary">
                   {"Categoría: " + publication.category}
                 </Typography>
-                <Divider/>
+                <Divider />
                 <Typography variant="h5" color="textPrimary">
                   {"Descripción"}
                 </Typography>
@@ -152,11 +167,8 @@ const ViewPublication = (props) => {
               </Grid>
               <Grid item xs={3}>
                 <div className={classes.buttonGroup}>
-                  <Button fullWidth variant={"contained"} color="primary">
+                  <Button fullWidth variant={"contained"} color="primary" onClick={handleClickOpen}>
                     Comprar
-                  </Button>
-                  <Button fullWidth variant={"contained"} color="secondary">
-                    Agregar al Carrito
                   </Button>
                 </div>
               </Grid>

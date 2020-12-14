@@ -14,10 +14,6 @@ import Theme from "./config/theme";
 function App(props) {
   const [user, setUser] = useState(null);
 
-  if (user) {
-    var id = firebase.auth().currentUser.uid;
-  }
-
   const onLogout = () => {
     setUser(null);
   };
@@ -37,7 +33,6 @@ function App(props) {
       }
     });
   }, []);
-     console.log(user, id);
   return (
     <div>
       <Router>

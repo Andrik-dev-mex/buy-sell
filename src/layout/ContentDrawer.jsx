@@ -12,6 +12,8 @@ import Drawer from "@material-ui/core/Drawer";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
+import EmailIcon from "@material-ui/icons/Email";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 
 const drawerWidth = 240;
 
@@ -78,8 +80,8 @@ const useStyles = makeStyles((theme) => ({
   },
   containerR: {
     display: "flex",
+    flexDirection: "row",
     width: "100%",
-    alignItems: "end",
     justifyContent: "flex-end",
   },
 }));
@@ -124,7 +126,17 @@ const ContentDrawer = (props) => {
               Buy Sell
             </Typography>
           </Link>
-          <div className={classes.containerR}>{props.userOptions}</div>
+          <div className={classes.containerR}>
+            <div>
+              <IconButton aria-label="messages" style={{color: "white"}}>
+                <EmailIcon  />
+              </IconButton>
+              <IconButton aria-label="notification" style={{color: "white"}}>
+                <NotificationsIcon  />
+              </IconButton>
+            </div>
+            {props.userOptions}
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
